@@ -30,3 +30,6 @@ Servers/*.project
 Servers/*.server
 /.metadata/
 /.recommenders/
+*.bak
+*/.settings/*
+*/.project

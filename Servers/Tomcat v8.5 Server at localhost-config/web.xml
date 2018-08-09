@@ -108,7 +108,7 @@
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
-	
+
 	<security-constraint>
     <web-resource-collection>
         <web-resource-name>*</web-resource-name>
@@ -118,6 +118,7 @@
         <transport-guarantee>CONFIDENTIAL</transport-guarantee>
     </user-data-constraint>
 </security-constraint>
+	
 
   <!-- The JSP page compiler and execution servlet, which is the mechanism  -->
   <!-- used by Tomcat to support JSP pages.  Traditionally, this servlet    -->
