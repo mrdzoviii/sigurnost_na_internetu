@@ -5,8 +5,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.Security;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
@@ -21,29 +19,30 @@ import javax.mail.internet.MimeMessage;
 import org.apache.commons.codec.binary.Hex;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.unibl.etf.sni.beans.AndroidBean;
+import org.unibl.etf.sni.mysql.dao.UserDao;
+import org.unibl.etf.sni.mysql.dto.UserDto;
 
 public class ServiceUtility {
 	private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-	
-	private static final Map<String,String> testData=new HashMap<>();
-	static {
-		testData.put("jovan", "joco-95@hotmail.com");
-	}
+
 	public static String generateAndroidToken(AndroidBean bean) {
-		if(testData.containsKey(bean.getUsername())) {
-			try {
-				if(match(bean.getUsername()+testData.get(bean.getUsername()),bean.getHash())) {
-					String token=tokenGenerator();
-					sendMail(testData.get(bean.getUsername()),token);
-					return token;
+		if (bean.getUsername() != null && bean.getPassword() != null) {
+			UserDto user = UserDao.getByUsername(bean.getUsername());
+			if (bean.getUsername().equals(user.getUsername())) {
+				try {
+					if (match(bean.getPassword(),user.getPassword())) {
+						String token = tokenGenerator();
+						sendMail(user.getEmail(), token);
+						return token;
+					}
+				} catch (NoSuchAlgorithmException | NoSuchProviderException e) {
+					e.printStackTrace();
 				}
-			} catch (NoSuchAlgorithmException | NoSuchProviderException e) {
-				e.printStackTrace();
 			}
 		}
 		return "NOT_SENT";
 	}
-	
+
 	public static final ResourceBundle bundle = ResourceBundle.getBundle("org.unibl.etf.sni.config.SniConfig");
 	private static final int LENGTH = Integer.parseInt(bundle.getString("token.length"));
 
@@ -111,7 +110,7 @@ public class ServiceUtility {
 		return builder.toString();
 
 	}
-	
+
 	public static void main(String[] args) {
 		sendMail("joco-95@hotmail.com", tokenGenerator());
 	}
