@@ -1,31 +1,63 @@
 package org.unibl.etf.sni.rest;
+import android.content.Context;
 
-import org.unibl.etf.sni.authenticator.R;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-import java.io.InputStream;
-import java.security.KeyStore;
-import java.security.cert.CertificateFactory;
+import org.unibl.etf.sni.util.MyCAVerification;
 
-import javax.security.cert.Certificate;
+import java.io.IOException;
 
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClientInstance {
     private static Retrofit retrofit;
-    private static final String BASE_URL = "https://192.168.99.114:8443/Api/rest/";
+    private static final String BASE_URL = "https://192.168.88.119:8443/Api/rest/";
 
 
 
+    private static Retrofit getRetrofitInstance(Context context) {
+        if (retrofit==null) {
+            Interceptor interceptor = new Interceptor() {
+                @Override
+                public Response intercept(Chain chain) throws IOException {
+                    Request newRequest = chain.request().newBuilder()
+                            //This is where you would add headers if need be.
+//                            .addHeader("Content-Type", "application/json")
+                            .build();
+                    return chain.proceed(newRequest);
+                }
+            };
 
-    public static Retrofit getRetrofitInstance() {
-        if (retrofit == null) {
-            retrofit = new retrofit2.Retrofit.Builder()
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+            OkHttpClient.Builder httpClient = MyCAVerification.getOkHttpClient(context).newBuilder();
+            httpClient.addInterceptor(interceptor);
+            httpClient.addInterceptor(logging);
+
+            retrofit= new Retrofit.Builder()
                     .baseUrl(BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(buildGsonConverterFactory())
+                    .client(httpClient.build())
                     .build();
         }
         return retrofit;
+    }
+    public static Api getApiService(Context context) {
+        return getRetrofitInstance(context).create(Api.class);
+    }
+
+    private static GsonConverterFactory buildGsonConverterFactory () {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.excludeFieldsWithoutExposeAnnotation();
+        Gson myGson = gsonBuilder.create();
+        return GsonConverterFactory.create(myGson);
     }
 }
