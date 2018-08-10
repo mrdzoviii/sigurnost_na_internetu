@@ -69,8 +69,8 @@ public class ServiceUtility {
 	}
 
 	public static boolean sendMail(String mailTo, String code) {
-		final String username = bundle.getString("username");
-		final String password = bundle.getString("password");
+		final String username = bundle.getString("mail.username");
+		final String password = bundle.getString("mail.password");
 		Properties prop = new Properties();
 		prop.put("mail.smtp.auth", bundle.getString("mail.smtp.auth"));
 		prop.put("mail.smtp.host", bundle.getString("mail.smtp.host"));
