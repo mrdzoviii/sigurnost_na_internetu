@@ -8,6 +8,7 @@ import org.unibl.etf.sni.util.MyCAVerification;
 
 import java.io.IOException;
 
+import okhttp3.CertificatePinner;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -41,9 +42,12 @@ public class RetrofitClientInstance {
             OkHttpClient.Builder httpClient = MyCAVerification.getOkHttpClient(context).newBuilder();
             httpClient.addInterceptor(interceptor);
             httpClient.addInterceptor(logging);
-
+            httpClient.certificatePinner(new CertificatePinner.Builder()
+                    .add("DESKTOP-K7KM0NM", "sha256/f9ebf45b76f4a18ffa8ca9a115f37c9e6d7890322b20d0d4559984df26b0bd8c")
+                    .build());
             retrofit= new Retrofit.Builder()
                     .baseUrl(BASE_URL)
+
                     .addConverterFactory(buildGsonConverterFactory())
                     .client(httpClient.build())
                     .build();
