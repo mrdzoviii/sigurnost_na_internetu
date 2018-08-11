@@ -1,22 +1,13 @@
 package org.unibl.etf.sni.authenticator;
 
-import android.content.Context;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import org.unibl.etf.sni.thread.LoginTask;
+import org.unibl.etf.sni.task.LoginTask;
 
-
-import java.io.IOException;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 

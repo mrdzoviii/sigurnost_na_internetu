@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- Use this file to deploy some handlers/chains and services      --><!-- Two ways to do this:                                           --><!--   java org.apache.axis.client.AdminClient deploy.wsdd          --><!--      after the axis server is running                          --><!-- or                                                             --><!--   java org.apache.axis.utils.Admin client|server deploy.wsdd   --><!--      from the same directory that the Axis engine runs         --><deployment xmlns="http://xml.apache.org/axis/wsdd/" xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+
+  <!-- Services from SoapService WSDL service -->
+
+  <service name="Soap" provider="java:RPC" style="wrapped" use="literal">
+      <parameter name="wsdlTargetNamespace" value="http://soap.sni.etf.unibl.org"/>
+      <parameter name="wsdlServiceElement" value="SoapService"/>
+      <parameter name="schemaQualified" value="http://soap.sni.etf.unibl.org"/>
+      <parameter name="wsdlServicePort" value="Soap"/>
+      <parameter name="className" value="org.unibl.etf.sni.soap.Soap"/>
+      <parameter name="wsdlPortType" value="Soap"/>
+      <parameter name="typeMappingVersion" value="1.2"/>
+      <operation xmlns:operNS="http://soap.sni.etf.unibl.org" name="test" qname="operNS:test" soapAction="">
+      </operation>
+      <operation xmlns:operNS="http://soap.sni.etf.unibl.org" name="test2" qname="operNS:test2" soapAction="">
+      </operation>
+      <parameter name="allowedMethods" value="test2 test"/>
+
+  </service>
+</deployment>

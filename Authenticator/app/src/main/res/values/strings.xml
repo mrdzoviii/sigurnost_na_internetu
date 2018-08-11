@@ -5,4 +5,8 @@
     <string name="login">Log In</string>
     <string name="verification_code">Verification code</string>
     <string name="verify">Verify</string>
+    <string name="dialog_title">Logout</string>
+    <string name="dialog_message">Are you sure?</string>
+    <string name="ok">YES</string>
+    <string name="no">NO</string>
 </resources>

@@ -1,11 +1,11 @@
-package org.unibl.etf.sni.thread;
+package org.unibl.etf.sni.task;
 
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.unibl.etf.sni.authenticator.VerifyActivity;
 import org.unibl.etf.sni.rest.Api;
@@ -13,7 +13,6 @@ import org.unibl.etf.sni.rest.RetrofitClientInstance;
 import org.unibl.etf.sni.rest.beans.AndroidBean;
 
 import java.io.IOException;
-import java.nio.Buffer;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -65,16 +64,23 @@ public class LoginTask extends AsyncTask<Void,Void,Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
         System.out.println("HELLO");
-        if ("NOT_SENT".equals(token)) {
-            System.out.println("NOT LOGGED");
-        } else {
-            //logged
-            mUsername.getText().clear();
-            Intent intent = new Intent(activity, VerifyActivity.class);
-            intent.putExtra("TOKEN", token);
-            activity.startActivity(intent);
+        if(token!=null) {
+            if ("NOT_SENT".equals(token)) {
+                System.out.println("NOT LOGGED");
+                Toast.makeText(activity,"Wrong credentials",Toast.LENGTH_LONG);
+                return;
+            } else {
+                //logged
+                mUsername.getText().clear();
+                System.out.println("TOKEN:" + token);
+                Intent intent = new Intent(activity, VerifyActivity.class);
+                intent.putExtra("TOKEN", token);
+                activity.startActivity(intent);
+            }
+            mPassword.getText().clear();
+        }else{
+            System.out.println("TOKEN NOT NULL");
         }
-        mPassword.getText().clear();
     }
 
     @Override

@@ -5,6 +5,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.Security;
+import java.util.Date;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
@@ -19,7 +20,9 @@ import javax.mail.internet.MimeMessage;
 import org.apache.commons.codec.binary.Hex;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.unibl.etf.sni.beans.AndroidBean;
+import org.unibl.etf.sni.mysql.dao.TokenDao;
 import org.unibl.etf.sni.mysql.dao.UserDao;
+import org.unibl.etf.sni.mysql.dto.TokenDto;
 import org.unibl.etf.sni.mysql.dto.UserDto;
 
 public class ServiceUtility {
@@ -31,9 +34,34 @@ public class ServiceUtility {
 			if (bean.getUsername().equals(user.getUsername())) {
 				try {
 					if (match(bean.getPassword(),user.getPassword())) {
-						String token = tokenGenerator();
-						sendMail(user.getEmail(), token);
-						return token;
+						TokenDto token=TokenDao.getByUserId(user.getId());
+						String genToken = tokenGenerator();
+						if(token!=null) {
+							token.setToken(genToken);
+							token.setValidUntil(new Date(System.currentTimeMillis()+30*60*1000));
+							if(TokenDao.update(token));
+							new Thread(new Runnable() {
+								@Override
+								public void run() {
+								
+									sendMail(user.getEmail(), genToken);	
+								}
+							}
+							).start();
+							return token.getToken()+"#"+token.getValidUntil().getTime();
+						}else {
+							token=new TokenDto(null, user.getId(), user, new Date(System.currentTimeMillis()+30*60*1000),genToken);
+							if(TokenDao.insert(token)) {
+								new Thread(new Runnable() {
+									@Override
+									public void run() {
+										sendMail(user.getEmail(), genToken);	
+									}
+								}
+								).start();
+								return token.getToken()+"#"+token.getValidUntil().getTime();
+							}				
+						}
 					}
 				} catch (NoSuchAlgorithmException | NoSuchProviderException e) {
 					e.printStackTrace();
