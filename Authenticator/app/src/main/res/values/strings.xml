@@ -9,4 +9,10 @@
     <string name="dialog_message">Are you sure?</string>
     <string name="ok">YES</string>
     <string name="no">NO</string>
+
+    <string name="serviceProtocol">https://</string>
+    <string name="host">192.168.88.119</string>
+    <string name="port">8443</string>
+    <string name="restServicePath">DokumentiServisi/rest/</string>
+    <string name="soapServicePath">Api/services/Soap</string>
 </resources>

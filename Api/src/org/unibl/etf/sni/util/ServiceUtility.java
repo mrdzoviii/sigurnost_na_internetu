@@ -6,6 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.Security;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
@@ -20,13 +21,21 @@ import javax.mail.internet.MimeMessage;
 import org.apache.commons.codec.binary.Hex;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.unibl.etf.sni.beans.AndroidBean;
+import org.unibl.etf.sni.beans.DocumentsBean;
+import org.unibl.etf.sni.beans.WebServiceBean;
+import org.unibl.etf.sni.mysql.dao.DrivingLicenceDao;
+import org.unibl.etf.sni.mysql.dao.IdentityCardDao;
+import org.unibl.etf.sni.mysql.dao.PassportDao;
 import org.unibl.etf.sni.mysql.dao.TokenDao;
 import org.unibl.etf.sni.mysql.dao.UserDao;
+import org.unibl.etf.sni.mysql.dto.DrivingLicenceDto;
+import org.unibl.etf.sni.mysql.dto.IdentityCardDto;
+import org.unibl.etf.sni.mysql.dto.PassportDto;
 import org.unibl.etf.sni.mysql.dto.TokenDto;
 import org.unibl.etf.sni.mysql.dto.UserDto;
 
 public class ServiceUtility {
-	private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNPQRSTUVWXYZ0123456789";
 
 	public static String generateAndroidToken(AndroidBean bean) {
 		if (bean.getUsername() != null && bean.getPassword() != null) {
@@ -70,7 +79,8 @@ public class ServiceUtility {
 		}
 		return "NOT_SENT";
 	}
-
+	
+	
 	public static final ResourceBundle bundle = ResourceBundle.getBundle("org.unibl.etf.sni.config.SniConfig");
 	private static final int LENGTH = Integer.parseInt(bundle.getString("token.length"));
 
@@ -142,5 +152,37 @@ public class ServiceUtility {
 	public static void main(String[] args) {
 		sendMail("joco-95@hotmail.com", tokenGenerator());
 	}
-
+	
+	public static DocumentsBean getDocumentsByDate(Date issueDate) {
+		List<IdentityCardDto> identityCards=IdentityCardDao.getByDate(issueDate);
+		List<PassportDto> passports=PassportDao.getByDate(issueDate);
+		List<DrivingLicenceDto> drivingLicences=DrivingLicenceDao.getByDate(issueDate);
+		DocumentsBean bean=new DocumentsBean();
+		bean.setDrivingLicences(drivingLicences);
+		bean.setIdentityCards(identityCards);
+		bean.setPassports(passports);
+		return bean;
+	}
+	
+	public static DocumentsBean getDocumentsByUsername(String username) {
+		List<IdentityCardDto> identityCards=IdentityCardDao.getByUsername(username);
+		List<PassportDto> passports=PassportDao.getByUsername(username);
+		List<DrivingLicenceDto> drivingLicences=DrivingLicenceDao.getByUsername(username);
+		DocumentsBean bean=new DocumentsBean();
+		bean.setDrivingLicences(drivingLicences);
+		bean.setIdentityCards(identityCards);
+		bean.setPassports(passports);
+		return bean;
+	}
+	
+	public static boolean checkServiceBean(WebServiceBean bean) throws NoSuchAlgorithmException, NoSuchProviderException {
+		if(bean.getUsername()!=null && bean.getWsHash()!=null) {
+			UserDto user=UserDao.getByUsername(bean.getUsername());
+			TokenDto token=TokenDao.getByUserId(user.getId());
+			if(new Date().before(token.getValidUntil()) && bean.getUsername().equals(user.getUsername()) && match(user.getPassword()+token.getToken(),bean.getWsHash())) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

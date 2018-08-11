@@ -4,48 +4,36 @@
 Built on Apr 22, 2006 (06:55:48 PDT)-->
  <wsdl:types>
   <schema elementFormDefault="qualified" targetNamespace="http://soap.sni.etf.unibl.org" xmlns="http://www.w3.org/2001/XMLSchema">
-   <element name="test">
-    <complexType/>
+   <element name="getDocumentsByDate">
+    <complexType>
+     <sequence>
+      <element name="username" type="xsd:string"/>
+      <element name="wsHash" type="xsd:string"/>
+      <element name="time" type="xsd:long"/>
+     </sequence>
+    </complexType>
    </element>
-   <element name="testResponse">
-    <complexType/>
-   </element>
-   <element name="test2">
-    <complexType/>
-   </element>
-   <element name="test2Response">
-    <complexType/>
+   <element name="getDocumentsByDateResponse">
+    <complexType>
+     <sequence>
+      <element name="getDocumentsByDateReturn" type="xsd:string"/>
+     </sequence>
+    </complexType>
    </element>
   </schema>
  </wsdl:types>
 
-   <wsdl:message name="test2Response">
+   <wsdl:message name="getDocumentsByDateRequest">
 
-      <wsdl:part element="impl:test2Response" name="parameters">
-
-      </wsdl:part>
-
-   </wsdl:message>
-
-   <wsdl:message name="testRequest">
-
-      <wsdl:part element="impl:test" name="parameters">
+      <wsdl:part element="impl:getDocumentsByDate" name="parameters">
 
       </wsdl:part>
 
    </wsdl:message>
 
-   <wsdl:message name="test2Request">
+   <wsdl:message name="getDocumentsByDateResponse">
 
-      <wsdl:part element="impl:test2" name="parameters">
-
-      </wsdl:part>
-
-   </wsdl:message>
-
-   <wsdl:message name="testResponse">
-
-      <wsdl:part element="impl:testResponse" name="parameters">
+      <wsdl:part element="impl:getDocumentsByDateResponse" name="parameters">
 
       </wsdl:part>
 
@@ -53,25 +41,13 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
 
    <wsdl:portType name="Soap">
 
-      <wsdl:operation name="test">
+      <wsdl:operation name="getDocumentsByDate">
 
-         <wsdl:input message="impl:testRequest" name="testRequest">
-
-       </wsdl:input>
-
-         <wsdl:output message="impl:testResponse" name="testResponse">
-
-       </wsdl:output>
-
-      </wsdl:operation>
-
-      <wsdl:operation name="test2">
-
-         <wsdl:input message="impl:test2Request" name="test2Request">
+         <wsdl:input message="impl:getDocumentsByDateRequest" name="getDocumentsByDateRequest">
 
        </wsdl:input>
 
-         <wsdl:output message="impl:test2Response" name="test2Response">
+         <wsdl:output message="impl:getDocumentsByDateResponse" name="getDocumentsByDateResponse">
 
        </wsdl:output>
 
@@ -83,35 +59,17 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
 
       <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
 
-      <wsdl:operation name="test">
+      <wsdl:operation name="getDocumentsByDate">
 
          <wsdlsoap:operation soapAction=""/>
 
-         <wsdl:input name="testRequest">
+         <wsdl:input name="getDocumentsByDateRequest">
 
             <wsdlsoap:body use="literal"/>
 
          </wsdl:input>
 
-         <wsdl:output name="testResponse">
-
-            <wsdlsoap:body use="literal"/>
-
-         </wsdl:output>
-
-      </wsdl:operation>
-
-      <wsdl:operation name="test2">
-
-         <wsdlsoap:operation soapAction=""/>
-
-         <wsdl:input name="test2Request">
-
-            <wsdlsoap:body use="literal"/>
-
-         </wsdl:input>
-
-         <wsdl:output name="test2Response">
+         <wsdl:output name="getDocumentsByDateResponse">
 
             <wsdlsoap:body use="literal"/>
 

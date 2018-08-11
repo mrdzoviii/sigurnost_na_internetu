@@ -33,9 +33,12 @@
   <ns1:parameter name="className" value="org.apache.axis.Version"/>
  </ns1:service>
  <ns1:service name="Soap" provider="java:RPC" style="wrapped" use="literal">
-  <ns2:operation name="test" qname="ns1:test" soapAction="" xmlns:ns1="http://soap.sni.etf.unibl.org" xmlns:ns2="http://xml.apache.org/axis/wsdd/"/>
-  <ns1:operation name="test2" qname="ns2:test2" soapAction="" xmlns:ns2="http://soap.sni.etf.unibl.org"/>
-  <ns1:parameter name="allowedMethods" value="test2 test"/>
+  <ns2:operation name="getDocumentsByDate" qname="ns1:getDocumentsByDate" returnQName="ns1:getDocumentsByDateReturn" returnType="xsd:string" soapAction="" xmlns:ns1="http://soap.sni.etf.unibl.org" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns2="http://xml.apache.org/axis/wsdd/">
+   <ns2:parameter qname="ns1:username" type="xsd:string"/>
+   <ns2:parameter qname="ns1:wsHash" type="xsd:string"/>
+   <ns2:parameter qname="ns1:time" type="xsd:long"/>
+  </ns2:operation>
+  <ns1:parameter name="allowedMethods" value="getDocumentsByDate"/>
   <ns1:parameter name="typeMappingVersion" value="1.2"/>
   <ns1:parameter name="wsdlPortType" value="Soap"/>
   <ns1:parameter name="className" value="org.unibl.etf.sni.soap.Soap"/>

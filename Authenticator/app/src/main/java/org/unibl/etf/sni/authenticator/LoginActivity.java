@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import org.unibl.etf.sni.task.DocumentsThread;
 import org.unibl.etf.sni.task.LoginTask;
 
 
@@ -25,6 +26,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
     public void login(View view){
+        new DocumentsThread(null,this).start();
         new LoginTask(mUsername,mPassword,this).execute();
     }
 
