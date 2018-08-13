@@ -9,10 +9,40 @@
     <string name="dialog_message">Are you sure?</string>
     <string name="ok">YES</string>
     <string name="no">NO</string>
+    <string name="wrong_credentials">Wrong credentials</string>
 
     <string name="serviceProtocol">https://</string>
-    <string name="host">192.168.88.119</string>
+    <string name="host">192.168.1.11</string>
     <string name="port">8443</string>
-    <string name="restServicePath">DokumentiServisi/rest/</string>
+    <string name="restServicePath">/Api/rest/</string>
     <string name="soapServicePath">Api/services/Soap</string>
+    <string name="btnDate">Get by date</string>
+    <string name="btnName">Get by pid</string>
+    <string name="date">Date</string>
+    <string name="name">Name:</string>
+    <string name="surname">Surname:</string>
+    <string name="pid">Person ID:</string>
+    <string name="birthDate">Date of birth:</string>
+    <string name="birthPlace">Place of birth:</string>
+    <string name="sex">Sex:</string>
+    <string name="residence">Residence:</string>
+    <string name="serial">Serial:</string>
+    <string name="valid_from">Valid from:</string>
+    <string name="valid_until">Valid until:</string>
+    <string name="type">Type:</string>
+    <string name="A">A:XXXX-XX-XX</string>
+    <string name="A1">A1:XXXX-XX-XX</string>
+    <string name="B">B:XXXX-XX-XX</string>
+    <string name="B1">B1:XXXX-XX-XX</string>
+    <string name="C">C:XXXX-XX-XX</string>
+    <string name="C1">C1:XXXX-XX-XX</string>
+    <string name="D">D:XXXX-XX-XX</string>
+    <string name="D1">D1:XXXX-XX-XX</string>
+    <string name="BE">BE:XXXX-XX-XX</string>
+    <string name="C1E">C1E:XXXX-XX-XX</string>
+    <string name="CE">CE:XXXX-XX-XX</string>
+    <string name="D1E">D1E:XXXX-XX-XX</string>
+    <string name="DE">DE:XXXX-XX-XX</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

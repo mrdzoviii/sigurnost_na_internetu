@@ -9,7 +9,7 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
      <sequence>
       <element name="username" type="xsd:string"/>
       <element name="wsHash" type="xsd:string"/>
-      <element name="time" type="xsd:long"/>
+      <element name="time" type="xsd:string"/>
      </sequence>
     </complexType>
    </element>

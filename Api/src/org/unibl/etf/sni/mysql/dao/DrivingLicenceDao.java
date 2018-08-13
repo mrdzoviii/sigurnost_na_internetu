@@ -13,7 +13,7 @@ import org.unibl.etf.sni.util.ConnectionPool;
 
 public class DrivingLicenceDao {
 	private static final String SQL_SELECT_BY_DATE="SELECT * FROM driving_licence WHERE valid_from=?";
-	private static final String SQL_SELECT_BY_USERNAME="SELECT i.* FROM driving_licence i INNER JOIN user u ON i.user_id=u.id WHERE u.username=?";
+	private static final String SQL_SELECT_BY_UID="SELECT i.* FROM driving_licence i INNER JOIN user u ON i.user_id=u.id WHERE u.pid=?";
 	private static final String SQL_INSERT="INSERT INTO driving_licence VALUES (?,?,?,?,?,?)";
 	
 	
@@ -71,15 +71,15 @@ public class DrivingLicenceDao {
 		}
 		return result;
 	}
-	public static List<DrivingLicenceDto> getByUsername(String username) {
+	public static List<DrivingLicenceDto> getByUid(String uid) {
 		PreparedStatement ps = null;
 		Connection c = null;
 		List<DrivingLicenceDto> result = new ArrayList<>();
 		ResultSet rs = null;
 		try {
 			c = ConnectionPool.getInstance().checkOut();
-			Object pom[] = { username };
-			ps = ConnectionPool.prepareStatement(c,SQL_SELECT_BY_USERNAME,false, pom);
+			Object pom[] = { uid };
+			ps = ConnectionPool.prepareStatement(c,SQL_SELECT_BY_UID,false, pom);
 			rs = ps.executeQuery();
 			if (rs.next()) {
 				DrivingLicenceDto idc=new DrivingLicenceDto();

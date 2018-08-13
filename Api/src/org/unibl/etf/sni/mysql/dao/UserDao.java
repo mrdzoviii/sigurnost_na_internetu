@@ -36,6 +36,7 @@ public class UserDao {
 				user.setSex(rs.getBoolean("sex"));
 				user.setName(rs.getString("name"));
 				user.setSurname(rs.getString("surname"));
+				user.setAdmin(rs.getBoolean("admin"));
 				result.add(user);
 			}
 			ps.close();
@@ -70,6 +71,7 @@ public class UserDao {
 				user.setSex(rs.getBoolean("sex"));
 				user.setName(rs.getString("name"));
 				user.setSurname(rs.getString("surname"));
+				user.setAdmin(rs.getBoolean("admin"));
 			}
 			ps.close();
 		} catch (Exception exp) {
@@ -104,6 +106,7 @@ public class UserDao {
 				user.setSex(rs.getBoolean("sex"));
 				user.setName(rs.getString("name"));
 				user.setSurname(rs.getString("surname"));
+				user.setAdmin(rs.getBoolean("admin"));
 			}
 			ps.close();
 		} catch (Exception exp) {

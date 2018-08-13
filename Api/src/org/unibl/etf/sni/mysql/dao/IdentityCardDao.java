@@ -13,7 +13,7 @@ import org.unibl.etf.sni.util.ConnectionPool;
 
 public class IdentityCardDao {
 	private static final String SQL_SELECT_BY_DATE="SELECT * FROM identity_card WHERE valid_from=?";
-	private static final String SQL_SELECT_BY_USERNAME="SELECT i.* FROM identity_card i INNER JOIN user u ON i.user_id=u.id WHERE u.username=?";
+	private static final String SQL_SELECT_BY_PID="SELECT i.* FROM identity_card i INNER JOIN user u ON i.user_id=u.id WHERE u.pid=?";
 	private static final String SQL_INSERT="INSERT INTO identity_card VALUES (?,?,?,?,?,?)";
 	
 	
@@ -67,15 +67,15 @@ public class IdentityCardDao {
 		}
 		return result;
 	}
-	public static List<IdentityCardDto> getByUsername(String username) {
+	public static List<IdentityCardDto> getByUid(String uid) {
 		PreparedStatement ps = null;
 		Connection c = null;
 		List<IdentityCardDto> result = new ArrayList<>();
 		ResultSet rs = null;
 		try {
 			c = ConnectionPool.getInstance().checkOut();
-			Object pom[] = { username };
-			ps = ConnectionPool.prepareStatement(c,SQL_SELECT_BY_USERNAME,false, pom);
+			Object pom[] = { uid};
+			ps = ConnectionPool.prepareStatement(c,SQL_SELECT_BY_PID,false, pom);
 			rs = ps.executeQuery();
 			if (rs.next()) {
 				IdentityCardDto idc=new IdentityCardDto();

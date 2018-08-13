@@ -14,10 +14,11 @@ public class UserDto {
 	private Boolean sex;
 	private String residence;
 	private String email;
+	private Boolean admin;
 	
 	
 	public UserDto(Integer id, String username, String password, String pid, String surname, String name,
-			Date dateOfBirth, String placeOfBirth, Boolean sex, String residence, String email) {
+			Date dateOfBirth, String placeOfBirth, Boolean sex, String residence, String email,Boolean admin) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -30,7 +31,20 @@ public class UserDto {
 		this.sex = sex;
 		this.residence = residence;
 		this.email = email;
+		this.admin=admin;
 	}
+	
+	
+	public Boolean getAdmin() {
+		return admin;
+	}
+
+
+	public void setAdmin(Boolean admin) {
+		this.admin = admin;
+	}
+
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

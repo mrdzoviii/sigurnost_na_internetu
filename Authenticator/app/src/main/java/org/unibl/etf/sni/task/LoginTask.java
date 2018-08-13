@@ -1,85 +1,60 @@
 package org.unibl.etf.sni.task;
 
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import org.unibl.etf.sni.authenticator.VerifyActivity;
+import org.unibl.etf.sni.bean.SessionBean;
 import org.unibl.etf.sni.rest.Api;
 import org.unibl.etf.sni.rest.RetrofitClientInstance;
 import org.unibl.etf.sni.rest.beans.AndroidBean;
-
+import org.unibl.etf.sni.util.Hash;
 import java.io.IOException;
-
+import java.util.Date;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
 public class LoginTask extends AsyncTask<Void,Void,Void> {
-    private EditText mUsername;
-    private EditText mPassword;
-    private Activity activity;
+    private  EditText mUsername;
+    private  EditText mPassword;
+    private  Activity activity;
+    private  TextView wrong;
     private String token;
 
-    public LoginTask(EditText mUsername, EditText mPassword,Activity ctx) {
+    public LoginTask(EditText mUsername, EditText mPassword,TextView wrong,Activity ctx) {
         this.mUsername = mUsername;
         this.mPassword = mPassword;
-
+        this.wrong=wrong;
         this.activity = ctx;
     }
-
-    public Activity getActivity() {
-        return activity;
-    }
-
-    public void setActivity(Activity activity) {
-        this.activity = activity;
-    }
-
-
-
-
-
-    public EditText getmUsername() {
-        return mUsername;
-    }
-
-    public void setmUsername(EditText mUsername) {
-        this.mUsername = mUsername;
-    }
-
-    public EditText getmPassword() {
-        return mPassword;
-    }
-
-    public void setmPassword(EditText mPassword) {
-        this.mPassword = mPassword;
-    }
-
-
 
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        System.out.println("HELLO");
+        wrong.setVisibility(View.INVISIBLE);
         if(token!=null) {
             if ("NOT_SENT".equals(token)) {
-                System.out.println("NOT LOGGED");
-                Toast.makeText(activity,"Wrong credentials",Toast.LENGTH_LONG);
+                wrong.setVisibility(View.VISIBLE);
                 return;
             } else {
-                //logged
+                SessionBean userBean=new SessionBean();
+                userBean.setUsername(mUsername.getText().toString());
+                userBean.setPassword(Hash.sha512Hash(mPassword.getText().toString()));
+                userBean.setToken(token.split("#")[0]);
+                userBean.setValidUntil(new Date(Long.valueOf(token.split("#")[1])));
                 mUsername.getText().clear();
-                System.out.println("TOKEN:" + token);
+                wrong.setVisibility(View.INVISIBLE);
                 Intent intent = new Intent(activity, VerifyActivity.class);
-                intent.putExtra("TOKEN", token);
+                intent.putExtra("BEAN",userBean);
                 activity.startActivity(intent);
             }
             mPassword.getText().clear();
         }else{
-            System.out.println("TOKEN NOT NULL");
+            Toast.makeText(activity,"Something went wrong",Toast.LENGTH_LONG);
         }
     }
 

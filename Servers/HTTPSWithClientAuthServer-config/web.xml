@@ -109,15 +109,7 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
-	<security-constraint>
-    <web-resource-collection>
-        <web-resource-name>*</web-resource-name>
-        <url-pattern>/*</url-pattern>
-    </web-resource-collection>
-    <user-data-constraint>
-        <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-    </user-data-constraint>
-</security-constraint>
+
 	
 
   <!-- The JSP page compiler and execution servlet, which is the mechanism  -->

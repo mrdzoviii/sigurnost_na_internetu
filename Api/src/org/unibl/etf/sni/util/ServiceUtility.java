@@ -5,6 +5,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.Security;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -36,40 +37,41 @@ import org.unibl.etf.sni.mysql.dto.UserDto;
 
 public class ServiceUtility {
 	private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNPQRSTUVWXYZ0123456789";
+	public static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	public static String generateAndroidToken(AndroidBean bean) {
 		if (bean.getUsername() != null && bean.getPassword() != null) {
 			UserDto user = UserDao.getByUsername(bean.getUsername());
-			if (bean.getUsername().equals(user.getUsername())) {
+			if (user != null && bean.getUsername().equals(user.getUsername())) {
 				try {
-					if (match(bean.getPassword(),user.getPassword())) {
-						TokenDto token=TokenDao.getByUserId(user.getId());
+					if (match(bean.getPassword(), user.getPassword())) {
+						TokenDto token = TokenDao.getByUserId(user.getId());
 						String genToken = tokenGenerator();
-						if(token!=null) {
+						if (token != null) {
 							token.setToken(genToken);
-							token.setValidUntil(new Date(System.currentTimeMillis()+30*60*1000));
-							if(TokenDao.update(token));
+							token.setValidUntil(new Date(System.currentTimeMillis() + 30 * 60 * 1000));
+							if (TokenDao.update(token))
+								;
 							new Thread(new Runnable() {
 								@Override
 								public void run() {
-								
-									sendMail(user.getEmail(), genToken);	
+
+									sendMail(user.getEmail(), genToken);
 								}
-							}
-							).start();
-							return token.getToken()+"#"+token.getValidUntil().getTime();
-						}else {
-							token=new TokenDto(null, user.getId(), user, new Date(System.currentTimeMillis()+30*60*1000),genToken);
-							if(TokenDao.insert(token)) {
+							}).start();
+							return token.getToken() + "#" + token.getValidUntil().getTime();
+						} else {
+							token = new TokenDto(null, user.getId(), user,
+									new Date(System.currentTimeMillis() + 30 * 60 * 1000), genToken);
+							if (TokenDao.insert(token)) {
 								new Thread(new Runnable() {
 									@Override
 									public void run() {
-										sendMail(user.getEmail(), genToken);	
+										sendMail(user.getEmail(), genToken);
 									}
-								}
-								).start();
-								return token.getToken()+"#"+token.getValidUntil().getTime();
-							}				
+								}).start();
+								return token.getToken() + "#" + token.getValidUntil().getTime();
+							}
 						}
 					}
 				} catch (NoSuchAlgorithmException | NoSuchProviderException e) {
@@ -79,8 +81,7 @@ public class ServiceUtility {
 		}
 		return "NOT_SENT";
 	}
-	
-	
+
 	public static final ResourceBundle bundle = ResourceBundle.getBundle("org.unibl.etf.sni.config.SniConfig");
 	private static final int LENGTH = Integer.parseInt(bundle.getString("token.length"));
 
@@ -152,36 +153,50 @@ public class ServiceUtility {
 	public static void main(String[] args) {
 		sendMail("joco-95@hotmail.com", tokenGenerator());
 	}
-	
+
 	public static DocumentsBean getDocumentsByDate(Date issueDate) {
-		List<IdentityCardDto> identityCards=IdentityCardDao.getByDate(issueDate);
-		List<PassportDto> passports=PassportDao.getByDate(issueDate);
-		List<DrivingLicenceDto> drivingLicences=DrivingLicenceDao.getByDate(issueDate);
-		DocumentsBean bean=new DocumentsBean();
+		List<IdentityCardDto> identityCards = IdentityCardDao.getByDate(issueDate);
+		List<PassportDto> passports = PassportDao.getByDate(issueDate);
+		List<DrivingLicenceDto> drivingLicences = DrivingLicenceDao.getByDate(issueDate);
+		DocumentsBean bean = new DocumentsBean();
 		bean.setDrivingLicences(drivingLicences);
 		bean.setIdentityCards(identityCards);
 		bean.setPassports(passports);
 		return bean;
 	}
-	
-	public static DocumentsBean getDocumentsByUsername(String username) {
-		List<IdentityCardDto> identityCards=IdentityCardDao.getByUsername(username);
-		List<PassportDto> passports=PassportDao.getByUsername(username);
-		List<DrivingLicenceDto> drivingLicences=DrivingLicenceDao.getByUsername(username);
-		DocumentsBean bean=new DocumentsBean();
-		bean.setDrivingLicences(drivingLicences);
-		bean.setIdentityCards(identityCards);
-		bean.setPassports(passports);
-		return bean;
+
+	public static DocumentsBean getDocumentsByUid(String uid, String username) {
+		UserDto user = UserDao.getByUsername(username);
+		if (isAdmin(username) || user.getPid().equals(uid)) {
+			List<IdentityCardDto> identityCards = IdentityCardDao.getByUid(uid);
+			List<PassportDto> passports = PassportDao.getByUid(uid);
+			List<DrivingLicenceDto> drivingLicences = DrivingLicenceDao.getByUid(uid);
+			DocumentsBean bean = new DocumentsBean();
+			bean.setDrivingLicences(drivingLicences);
+			bean.setIdentityCards(identityCards);
+			bean.setPassports(passports);
+			return bean;
+		}
+		return null;
 	}
-	
-	public static boolean checkServiceBean(WebServiceBean bean) throws NoSuchAlgorithmException, NoSuchProviderException {
-		if(bean.getUsername()!=null && bean.getWsHash()!=null) {
-			UserDto user=UserDao.getByUsername(bean.getUsername());
-			TokenDto token=TokenDao.getByUserId(user.getId());
-			if(new Date().before(token.getValidUntil()) && bean.getUsername().equals(user.getUsername()) && match(user.getPassword()+token.getToken(),bean.getWsHash())) {
+
+	public static boolean checkServiceBean(WebServiceBean bean)
+			throws NoSuchAlgorithmException, NoSuchProviderException {
+		if (bean!=null && bean.getUsername() != null && bean.getWsHash() != null) {
+			UserDto user = UserDao.getByUsername(bean.getUsername());
+			TokenDto token = TokenDao.getByUserId(user.getId());
+			if (new Date().before(token.getValidUntil()) && bean.getUsername().equals(user.getUsername())
+					&& match(user.getPassword() + token.getToken(), bean.getWsHash())) {
 				return true;
 			}
+		}
+		return false;
+	}
+
+	public static boolean isAdmin(String username) {
+		UserDto user = UserDao.getByUsername(username);
+		if (user != null) {
+			return user.getAdmin();
 		}
 		return false;
 	}

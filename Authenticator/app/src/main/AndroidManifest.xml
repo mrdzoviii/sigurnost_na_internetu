@@ -19,7 +19,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".VerifyActivity"></activity>
+        <activity android:name=".VerifyActivity" />
+        <activity android:name=".DateActivity" />
+        <activity android:name=".PidActivity"></activity>
     </application>
 
 </manifest>

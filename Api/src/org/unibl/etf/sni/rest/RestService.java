@@ -13,6 +13,7 @@ import javax.ws.rs.core.Response;
 
 import org.json.JSONObject;
 import org.unibl.etf.sni.beans.AndroidBean;
+import org.unibl.etf.sni.beans.DocumentsBean;
 import org.unibl.etf.sni.beans.RestBean;
 import org.unibl.etf.sni.util.ServiceUtility;
 
@@ -24,8 +25,7 @@ public class RestService {
 	public String test() {
 		return "TEST";
 	}
-	
-	
+
 	@Path("/android/auth")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
@@ -33,21 +33,25 @@ public class RestService {
 	public Response auth(AndroidBean bean) {
 		return Response.ok(ServiceUtility.generateAndroidToken(bean)).build();
 	}
-	
+
 	@Path("/documents")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response getDocumentsByUsername(RestBean bean) {
+	public Response getDocumentsByUid(RestBean bean) {
 		try {
-			System.out.println(bean.toString());
-			if(ServiceUtility.checkServiceBean(bean.getServiceBean()) && bean.getUsername()!=null) {
-				return Response.ok(new JSONObject(ServiceUtility.getDocumentsByUsername(bean.getUsername())).toString()).build();
+			if (ServiceUtility.checkServiceBean(bean.getServiceBean()) && bean.getUid() != null) {
+				DocumentsBean response = ServiceUtility.getDocumentsByUid(bean.getUid(),
+						bean.getServiceBean().getUsername());
+				if (response != null) {
+					return Response.ok(new JSONObject(response).toString()).build();
+				}
+				return Response.ok("NOT_AUTHORIZED").build();
 			}
 		} catch (NoSuchAlgorithmException | NoSuchProviderException e) {
 			e.printStackTrace();
 		}
-		return Response.status(408).build();
+		return Response.ok("INVALID_BEAN").build();
 	}
-	
+
 }

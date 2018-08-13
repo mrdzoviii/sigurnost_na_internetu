@@ -60,13 +60,13 @@ public class ApiService {
     public void setTimeOut(int seconds){
         this.timeOut = seconds * 1000;
     }
-    public void getDocumentsByDateAsync(String username,String wsHash,long time) throws Exception {
+    public void getDocumentsByDateAsync(String username,String wsHash,String time) throws Exception {
         if (this.eventHandler == null)
             throw new Exception("Async Methods Requires IWsdl2CodeEvents");
         getDocumentsByDateAsync(username,wsHash,time, null);
     }
     
-    public void getDocumentsByDateAsync(final String username,final String wsHash,final long time, final List<HeaderProperty> headers) throws Exception {
+    public void getDocumentsByDateAsync(final String username,final String wsHash,final String time, final List<HeaderProperty> headers) throws Exception {
         
         new AsyncTask<Void, Void, String>(){
             @Override
@@ -88,11 +88,11 @@ public class ApiService {
         }.execute();
     }
     
-    public String getDocumentsByDate(String username,String wsHash, long time){
+    public String getDocumentsByDate(String username,String wsHash,String time){
         return getDocumentsByDate(username, wsHash,time, null);
     }
     
-    public String getDocumentsByDate(String username,String wsHash,long time, List<HeaderProperty> headers){
+    public String getDocumentsByDate(String username,String wsHash,String time, List<HeaderProperty> headers){
         SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         soapEnvelope.implicitTypes = true;
         soapEnvelope.dotNet = true;

@@ -11,7 +11,7 @@ import org.unibl.etf.sni.mysql.dto.DrivingLicenceCategoryDto;
 import org.unibl.etf.sni.util.ConnectionPool;
 
 public class DrivingLicenceCategoryDao {
-	private static final String SQL_SELECT_BY_DRIVING_LICENCE="SELECT * FROM driving_licence_has_category WHERE driving_licence_id=?";
+	private static final String SQL_SELECT_BY_DRIVING_LICENCE="SELECT * FROM driving_licence_has_category WHERE driving_licence_id=? and banned=0";
 	private static final String SQL_INSERT="INSERT INTO driving_licence_has_category VALUES (?,?,?,?)";
 	public static List<DrivingLicenceCategoryDto> getByLicenceId(Integer id) {
 		PreparedStatement ps = null;

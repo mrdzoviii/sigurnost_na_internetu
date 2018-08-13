@@ -13,7 +13,7 @@ import org.unibl.etf.sni.util.ConnectionPool;
 
 public class PassportDao {
 	private static final String SQL_SELECT_BY_DATE="SELECT * FROM passport WHERE valid_from=?";
-	private static final String SQL_SELECT_BY_USERNAME="SELECT p.* FROM passport p INNER JOIN user u ON p.user_id=u.id WHERE u.username=?";
+	private static final String SQL_SELECT_BY_UID="SELECT p.* FROM passport p INNER JOIN user u ON p.user_id=u.id WHERE u.pid=?";
 	private static final String SQL_INSERT="INSERT INTO passport VALUES (?,?,?,?,?,?)";
 	
 	
@@ -67,15 +67,15 @@ public class PassportDao {
 		}
 		return result;
 	}
-	public static List<PassportDto> getByUsername(String username) {
+	public static List<PassportDto> getByUid(String pid) {
 		PreparedStatement ps = null;
 		Connection c = null;
 		List<PassportDto> result = new ArrayList<>();
 		ResultSet rs = null;
 		try {
 			c = ConnectionPool.getInstance().checkOut();
-			Object pom[] = { username };
-			ps = ConnectionPool.prepareStatement(c,SQL_SELECT_BY_USERNAME,false, pom);
+			Object pom[] = { pid };
+			ps = ConnectionPool.prepareStatement(c,SQL_SELECT_BY_UID,false, pom);
 			rs = ps.executeQuery();
 			if (rs.next()) {
 				PassportDto idc=new PassportDto();

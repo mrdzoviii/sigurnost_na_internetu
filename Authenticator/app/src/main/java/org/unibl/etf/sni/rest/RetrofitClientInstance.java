@@ -4,6 +4,8 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.unibl.etf.sni.authenticator.LoginActivity;
+import org.unibl.etf.sni.authenticator.R;
 import org.unibl.etf.sni.util.MyCAVerification;
 
 import java.io.IOException;
@@ -19,7 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClientInstance {
     private static Retrofit retrofit;
-    private static final String BASE_URL = "https://192.168.88.119:8443/Api/rest/";
+
 
 
 
@@ -35,16 +37,15 @@ public class RetrofitClientInstance {
                     return chain.proceed(newRequest);
                 }
             };
-
+            String BASE_URL=context.getString(R.string.serviceProtocol)+context.getString(R.string.host)+":"+context.getString(R.string.port)+
+                    context.getString(R.string.restServicePath);
+            System.out.println(BASE_URL);
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
             OkHttpClient.Builder httpClient = MyCAVerification.getOkHttpClient(context).newBuilder();
             httpClient.addInterceptor(interceptor);
             httpClient.addInterceptor(logging);
-            httpClient.certificatePinner(new CertificatePinner.Builder()
-                    .add("DESKTOP-K7KM0NM", "sha256/f9ebf45b76f4a18ffa8ca9a115f37c9e6d7890322b20d0d4559984df26b0bd8c")
-                    .build());
             retrofit= new Retrofit.Builder()
                     .baseUrl(BASE_URL)
 
