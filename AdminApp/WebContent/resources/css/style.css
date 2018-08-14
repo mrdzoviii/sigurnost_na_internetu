@@ -1,0 +1,27 @@
+.textArea { width: 100% ;
+			resize: none;
+			font-size: 12px;
+			background-color: green;}
+.picture { max-width: 200px ;}
+
+ td,tr {
+	border-style: none !important;
+}
+.ui-corner-bottom {
+	border-style:none !important;
+}
+.ui-fileupload-buttonbar {
+	border-style: none !important;
+	background: #F2F1F1;
+	margin-top: 15px;
+}
+body{
+	font-family: sans-serif;
+	font-style: normal;
+	font-size: 12pt;
+}
+#ad_form\:submit{
+	width: 200px;
+	height: 50px;
+	font-size:15pt;
+}
