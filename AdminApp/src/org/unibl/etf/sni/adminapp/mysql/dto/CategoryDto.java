@@ -1,9 +1,15 @@
 package org.unibl.etf.sni.adminapp.mysql.dto;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlTransient;
 
 @XmlTransient
-public class CategoryDto {
+public class CategoryDto implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2560456122394660201L;
 	@XmlTransient
 	private Integer id;
 	private String category;

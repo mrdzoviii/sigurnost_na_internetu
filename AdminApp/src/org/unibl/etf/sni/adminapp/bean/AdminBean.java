@@ -1,27 +1,49 @@
 package org.unibl.etf.sni.adminapp.bean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+
+import org.unibl.etf.sni.adminapp.mysql.dao.CategoryDao;
+import org.unibl.etf.sni.adminapp.mysql.dao.DrivingLicenceDao;
+import org.unibl.etf.sni.adminapp.mysql.dao.IdentityCardDao;
+import org.unibl.etf.sni.adminapp.mysql.dao.PassportDao;
+import org.unibl.etf.sni.adminapp.mysql.dao.UserDao;
+import org.unibl.etf.sni.adminapp.mysql.dto.DrivingLicenceCategoryDto;
+import org.unibl.etf.sni.adminapp.mysql.dto.DrivingLicenceDto;
+import org.unibl.etf.sni.adminapp.mysql.dto.IdentityCardDto;
+import org.unibl.etf.sni.adminapp.mysql.dto.PassportDto;
+import org.unibl.etf.sni.adminapp.mysql.dto.UserDto;
+import org.unibl.etf.sni.adminapp.util.ServiceUtility;
 
 @ManagedBean
 @SessionScoped
 public class AdminBean implements Serializable {
 	private static final long serialVersionUID = -6057902019315345496L;
-	
-	private String name;
-	private String surname;
-	private Date dateOfBirth;
-	private String placeOfBirth;
-	private String personId;
+	private static final String IDENTITY_CARD=ServiceUtility.bundle.getString("identityCard");
+	private static final String PASSPORT=ServiceUtility.bundle.getString("passport");
+	private static final String DRIVING_LICENNCE=ServiceUtility.bundle.getString("drivingLicence");
+	private static final String PID_REGEX=ServiceUtility.bundle.getString("pidRegex");
+
+	private String pid;
+	private UserDto user;
+	private PassportDto passport;
+	private IdentityCardDto identityCard;
+	private DrivingLicenceDto drivingLicence;
+	private Date today;
 	private Date validFrom;
 	private Date validUntil;
-	private String serial;
-	private String residence;
 	private String type;
+	private boolean pType=false;
+	private boolean idType=true;
+	private boolean dlType=false;
 	
 	//drivinglicence
 	private Date a;
@@ -43,19 +65,25 @@ public class AdminBean implements Serializable {
 		clear();
 	}
 	
-	public void saveDocument() {
-		System.out.println("DOCUMENT SAVED");
+	
+	
+	public void onTypeChanged() {
+		pType = PASSPORT.equals(type);
+		idType =IDENTITY_CARD.equals(type);
+		dlType=DRIVING_LICENNCE.equals(type);
 	}
 	
 	private void clear() {
-		name="";
-		surname="";
-		serial="";
-		type="IDENTITY_CARD";
-		personId="";
-		dateOfBirth=null;
-		placeOfBirth="";
-		residence="";
+		type=IDENTITY_CARD;
+		today=new Date();
+		pid="";
+		user=null;
+		pType=false;
+		idType=true;
+		dlType=false;
+		passport=new PassportDto();
+		identityCard=new IdentityCardDto();
+		drivingLicence=new DrivingLicenceDto();
 		validFrom=new Date();
 		validUntil=null;
 		a=null;
@@ -72,79 +100,208 @@ public class AdminBean implements Serializable {
 		c1e=null;
 	}
 	
-	
-	
-	
+	public void saveDocument() {
+		UserDto user=UserDao.getByPid(pid);
+		if( pid.equals("") || !pid.matches(PID_REGEX) || validFrom==null || validUntil==null || user==null) {
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Input data not valid", "");
+			FacesContext.getCurrentInstance().addMessage(null, message);
+			return;
+		}
+		
+		if(IDENTITY_CARD.equals(type)) {
+			identityCard.setSerial(ServiceUtility.serialGenerator());
+			identityCard.setStatus(true);
+			identityCard.setUserId(user.getId());
+			identityCard.setValidFrom(validFrom);
+			identityCard.setValidUntil(validUntil);
+			if(IdentityCardDao.insert(identityCard)) {
+				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
+						"Document created", "");
+				FacesContext.getCurrentInstance().addMessage(null, message);
+				clear();
+				return;
+			}
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Document not created", "");
+			FacesContext.getCurrentInstance().addMessage(null, message);
+			return;
+		}else if(PASSPORT.equals(type)) {
+			passport.setSerial(ServiceUtility.serialGenerator());
+			passport.setStatus(true);
+			passport.setUserId(user.getId());
+			passport.setValidFrom(validFrom);
+			passport.setValidUntil(validUntil);
+			if(PassportDao.insert(passport)) {
+				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
+						"Document created", "");
+				FacesContext.getCurrentInstance().addMessage(null, message);
+				clear();
+				return;
+			}
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Document not created", "");
+			FacesContext.getCurrentInstance().addMessage(null, message);
+			return;
+		}else {
+				drivingLicence.setSerial(ServiceUtility.serialGenerator());
+			drivingLicence.setStatus(true);
+				drivingLicence.setUserId(user.getId());
+				drivingLicence.setValidFrom(validFrom);
+				drivingLicence.setValidUntil(validUntil);
+				List<DrivingLicenceCategoryDto> categories=new ArrayList<>();
+				if(a!=null) {
+					categories.add(new DrivingLicenceCategoryDto(null, CategoryDao.getByName("A").getId(),a,false,null));
+				}
+				if(a1!=null) {
+					categories.add(new DrivingLicenceCategoryDto(null, CategoryDao.getByName("A1").getId(),a1,false,null));
+				}
+				if(b!=null) {
+					categories.add(new DrivingLicenceCategoryDto(null, CategoryDao.getByName("B").getId(),b,false,null));
+				}
+				if(b1!=null) {
+					categories.add(new DrivingLicenceCategoryDto(null, CategoryDao.getByName("B1").getId(),b1,false,null));
+				}
+				if(c!=null) {
+					categories.add(new DrivingLicenceCategoryDto(null, CategoryDao.getByName("C").getId(),c,false,null));
+				}
+				if(c1!=null) {
+					categories.add(new DrivingLicenceCategoryDto(null, CategoryDao.getByName("C1").getId(),c1,false,null));
+				}
+				if(d!=null) {
+					categories.add(new DrivingLicenceCategoryDto(null, CategoryDao.getByName("D").getId(),d,false,null));
+				}
+				if(d1!=null) {
+					categories.add(new DrivingLicenceCategoryDto(null, CategoryDao.getByName("D1").getId(),d1,false,null));
+				}
+				if(be!=null) {
+					categories.add(new DrivingLicenceCategoryDto(null, CategoryDao.getByName("BE").getId(),be,false,null));
+				}
+				if(ce!=null) {
+					categories.add(new DrivingLicenceCategoryDto(null, CategoryDao.getByName("CE").getId(),ce,false,null));
+				}
+				if(c1e!=null) {
+					categories.add(new DrivingLicenceCategoryDto(null, CategoryDao.getByName("C1E").getId(),c1e,false,null));
+				}
+				if(de!=null) {
+					categories.add(new DrivingLicenceCategoryDto(null, CategoryDao.getByName("DE").getId(),de,false,null));
+				}
+				System.out.println(categories.size());
+				drivingLicence.setCategories(categories);
+				
+				if(DrivingLicenceDao.insert(drivingLicence)) {
+					FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
+							"Document created", "");
+					FacesContext.getCurrentInstance().addMessage(null, message);
+					clear();
+					return;
+				}
+				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+						"Document not created", "");
+				FacesContext.getCurrentInstance().addMessage(null, message);
+				return;
+		}
+	}
 	
 	// getters and setters
 	
 	
 	
-	
-	
-	public String getName() {
-		return name;
+	public String getType() {
+		return type;
 	}
+	public boolean ispType() {
+		return pType;
+	}
+
+	public void setpType(boolean pType) {
+		this.pType = pType;
+	}
+
+	public boolean isIdType() {
+		return idType;
+	}
+
+	public void setIdType(boolean idType) {
+		this.idType = idType;
+	}
+
+	public boolean isDlType() {
+		return dlType;
+	}
+
+	public void setDlType(boolean dlType) {
+		this.dlType = dlType;
+	}
+
+	public String getPid() {
+		return pid;
+	}
+
+	public void setPid(String pid) {
+		this.pid = pid;
+	}
+
+	public Date getValidFrom() {
+		return validFrom;
+	}
+
+	public void setValidFrom(Date validFrom) {
+		this.validFrom = validFrom;
+	}
+
+	public Date getValidUntil() {
+		return validUntil;
+	}
+
+	public void setValidUntil(Date validUntil) {
+		this.validUntil = validUntil;
+	}
+
 	public AdminBean() {
 		super();
 	}
 
-	public String getResidence() {
-		return residence;
+	public UserDto getUser() {
+		return user;
 	}
 
-	public void setResidence(String residence) {
-		this.residence = residence;
+	public void setUser(UserDto user) {
+		this.user = user;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public PassportDto getPassport() {
+		return passport;
 	}
-	public String getSurname() {
-		return surname;
+
+	public void setPassport(PassportDto passport) {
+		this.passport = passport;
 	}
-	public void setSurname(String surname) {
-		this.surname = surname;
+
+	public IdentityCardDto getIdentityCard() {
+		return identityCard;
 	}
-	public Date getDateOfBirth() {
-		return dateOfBirth;
+
+	public void setIdentityCard(IdentityCardDto identityCard) {
+		this.identityCard = identityCard;
 	}
-	public void setDateOfBirth(Date dateOfBirth) {
-		this.dateOfBirth = dateOfBirth;
+
+	public DrivingLicenceDto getDrivingLicence() {
+		return drivingLicence;
 	}
-	public String getPlaceOfBirth() {
-		return placeOfBirth;
+
+	public void setDrivingLicence(DrivingLicenceDto drivingLicence) {
+		this.drivingLicence = drivingLicence;
 	}
-	public void setPlaceOfBirth(String placeOfBirth) {
-		this.placeOfBirth = placeOfBirth;
+
+	public Date getToday() {
+		return today;
 	}
-	public String getPersonId() {
-		return personId;
+
+	public void setToday(Date today) {
+		this.today = today;
 	}
-	public void setPersonId(String personId) {
-		this.personId = personId;
-	}
-	public Date getValidFrom() {
-		return validFrom;
-	}
-	public void setValidFrom(Date validFrom) {
-		this.validFrom = validFrom;
-	}
-	public Date getValidUntil() {
-		return validUntil;
-	}
-	public void setValidUntil(Date validUntil) {
-		this.validUntil = validUntil;
-	}
-	public String getSerial() {
-		return serial;
-	}
-	public void setSerial(String serial) {
-		this.serial = serial;
-	}
-	public String getType() {
-		return type;
-	}
+
 	public void setType(String type) {
 		this.type = type;
 	}
@@ -221,85 +378,6 @@ public class AdminBean implements Serializable {
 		this.de = de;
 	}
 	
-	
-	 
-	
-	
-	
-	/*
-
-	
-	public void saveAd() {
-		
-		if (ad.getImage() == null && (ad.getText() == null || ad.getText().isEmpty())) {
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Ad text or text image must be entered", "");
-			FacesContext.getCurrentInstance().addMessage(null, message);
-			return;
-		}
-		if ("Free".equals(type)) {
-			ad.setDateTo(ServiceUtility.getOffsetDate(1, ad.getDateFrom()));
-		} else {
-			ad.setDateTo(ServiceUtility.getOffsetDate(days, ad.getDateFrom()));
-			if (ServiceUtility.differeceInDays(ad.getDateFrom(), ad.getDateTo()) < 1) {
-				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,
-						"Ad date from and date to not valid", "");
-				FacesContext.getCurrentInstance().addMessage(null, message);
-				return;
-			}
-			if (!ServiceUtility.checkEmail(account.getMail())) {
-				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,
-						"IpBanka don't recognize this email with any account", "");
-				FacesContext.getCurrentInstance().addMessage(null, message);
-				return;
-			}
-
-			try {
-				IpBankaSoapServiceServiceLocator locator = new IpBankaSoapServiceServiceLocator();
-				IpBankaSoapService service = locator.getIpBankaSoapService();
-				if (service.validateData(account.getMail(), account.getName(), account.getSurname(),
-						account.getCardNumber(), account.getCardType(), account.getExpirationTime(), account.getCvc(),
-						ServiceUtility.parseDouble(getPrice()))) {
-					if(!service.payTotal(account.getMail(), account.getName(), account.getSurname(),
-							account.getCardNumber(), account.getCardType(), account.getExpirationTime(),
-							account.getCvc(), ServiceUtility.parseDouble(getPrice()))){
-						FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Eror during payment", "");
-						FacesContext.getCurrentInstance().addMessage(null, message);
-						return;
-					}
-				} else {
-					FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "You enetered invalid data",
-							"");
-					FacesContext.getCurrentInstance().addMessage(null, message);
-					return;
-				}
-			} catch (ServiceException e) {
-				e.printStackTrace();
-				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Eror during payment", "");
-				FacesContext.getCurrentInstance().addMessage(null, message);
-				return;
-			} catch (RemoteException e) {
-				e.printStackTrace();
-				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Eror during payment", "");
-				FacesContext.getCurrentInstance().addMessage(null, message);
-				return;
-			}
-
-		}
-
-		if (AdDao.insertAd(ad)) {
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Ad succesufully added", "");
-			FacesContext.getCurrentInstance().addMessage(null, message);
-			clear();
-		}else {
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ad not succesufully added", "");
-			FacesContext.getCurrentInstance().addMessage(null, message);
-		}
-
-	
-
-
-*/
 	
 	
 	

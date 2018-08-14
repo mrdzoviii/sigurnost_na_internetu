@@ -1,5 +1,6 @@
 package org.unibl.etf.sni.adminapp.mysql.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -9,7 +10,11 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.unibl.etf.sni.adminapp.mysql.dao.UserDao;
 
 @XmlRootElement
-public class DrivingLicenceDto {
+public class DrivingLicenceDto implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2828430044694599409L;
 	@XmlTransient
 	private Integer id;
 	private Date validFrom;

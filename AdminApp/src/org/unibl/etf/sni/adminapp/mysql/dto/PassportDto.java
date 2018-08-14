@@ -1,5 +1,6 @@
 package org.unibl.etf.sni.adminapp.mysql.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -8,7 +9,11 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.unibl.etf.sni.adminapp.mysql.dao.UserDao;
 
 @XmlRootElement
-public class PassportDto {
+public class PassportDto implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@XmlTransient
 	private Integer id;
 	private Date validFrom;

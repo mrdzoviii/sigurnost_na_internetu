@@ -1,5 +1,6 @@
 package org.unibl.etf.sni.adminapp.mysql.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -7,8 +8,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.unibl.etf.sni.adminapp.mysql.dao.UserDao;
 
 @XmlRootElement
-public class IdentityCardDto {
+public class IdentityCardDto implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7545102414551619060L;
 	private Integer id;
 	private Date validFrom;
 	private Date validUntil;

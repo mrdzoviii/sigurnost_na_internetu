@@ -1,8 +1,13 @@
 package org.unibl.etf.sni.adminapp.mysql.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class UserDto {
+public class UserDto implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8477341468448585620L;
 	private Integer id;
 	private String username;
 	private String password;
@@ -14,7 +19,7 @@ public class UserDto {
 	private Boolean sex;
 	private String residence;
 	private String email;
-	private Boolean admin;
+	private Boolean admin=false;
 	
 	
 	public UserDto(Integer id, String username, String password, String pid, String surname, String name,

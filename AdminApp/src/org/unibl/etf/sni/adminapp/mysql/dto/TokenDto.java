@@ -1,10 +1,15 @@
 package org.unibl.etf.sni.adminapp.mysql.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import org.unibl.etf.sni.adminapp.mysql.dao.UserDao;
 
-public class TokenDto {
+public class TokenDto implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1293899053015219740L;
 	private Integer id;
 	private Integer userId;
 	private UserDto user;

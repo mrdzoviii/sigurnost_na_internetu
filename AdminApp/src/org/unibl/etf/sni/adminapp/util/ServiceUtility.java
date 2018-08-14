@@ -12,16 +12,29 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 public class ServiceUtility {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
+	private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNPQRSTUVWXYZ0123456789";
+	
 	
 	public static final ResourceBundle bundle = ResourceBundle.getBundle("org.unibl.etf.sni.adminapp.config.AdminApp");
+	private static final int LENGTH = Integer.parseInt(bundle.getString("token.length"));
 	public static String sha512Hash(String plainText) throws NoSuchAlgorithmException, NoSuchProviderException {
 		setProvider();
 		MessageDigest mda = MessageDigest.getInstance("SHA-512", "BC");
 		byte[] digest = mda.digest(plainText.trim().getBytes());
 		return Hex.encodeHexString(digest);
 	}
+	public static String serialGenerator() {
+		StringBuilder builder = new StringBuilder();
+		int count = LENGTH;
+		while (count-- != 0) {
+			int character = (int) (Math.random() * ALPHA_NUMERIC_STRING.length());
+			builder.append(ALPHA_NUMERIC_STRING.charAt(character));
+		}
+		return builder.toString();
 
+	}
+	
+	
 	public static boolean match(String plainText, String hash)
 			throws NoSuchAlgorithmException, NoSuchProviderException {
 		if (plainText == null || hash == null) {

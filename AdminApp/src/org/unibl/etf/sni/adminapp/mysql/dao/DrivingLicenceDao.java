@@ -21,6 +21,7 @@ public class DrivingLicenceDao {
 	public static boolean insert(DrivingLicenceDto idc) {
 		PreparedStatement ps = null;
 		Connection c = null;
+		ResultSet rs=null;
 		boolean inserted=false;
 		try {
 			c = ConnectionPool.getInstance().checkOut();
@@ -28,9 +29,11 @@ public class DrivingLicenceDao {
 			Object pom[] = { null,idc.getValidFrom(),idc.getValidUntil(),idc.getStatus(),idc.getUserId(),idc.getSerial()};
 			ps = ConnectionPool.prepareStatement(c, SQL_INSERT, true, pom);
 			ps.executeUpdate();
-			inserted=ps.getGeneratedKeys().next();
+			rs=ps.getGeneratedKeys();
+			inserted=rs.next();
 			if(inserted) {
-				DrivingLicenceCategoryDao.batchInsert(idc.getCategories());
+				System.out.println(rs.getLong(1));
+				DrivingLicenceCategoryDao.batchInsert(rs.getLong(1),idc.getCategories());
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

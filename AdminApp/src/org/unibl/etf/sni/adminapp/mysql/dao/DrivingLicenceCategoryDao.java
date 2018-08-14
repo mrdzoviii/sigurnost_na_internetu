@@ -41,7 +41,7 @@ public class DrivingLicenceCategoryDao {
 		return result;
 	}
 	
-	public static boolean batchInsert(List<DrivingLicenceCategoryDto> categories) {
+	public static boolean batchInsert(Long id,List<DrivingLicenceCategoryDto> categories) {
 		PreparedStatement ps = null;
 		Connection c = null;
 		boolean inserted=false;
@@ -51,7 +51,7 @@ public class DrivingLicenceCategoryDao {
 			ps=c.prepareStatement(SQL_INSERT);
 			for(DrivingLicenceCategoryDto dl:categories)
 			{
-				ps.setInt(1,dl.getDrivingLicenceId());
+				ps.setInt(1,id.intValue());
 				ps.setInt(2, dl.getCategoryId());
 				ps.setDate(3, new java.sql.Date(dl.getValidFrom().getTime()));
 				ps.setBoolean(4, dl.getBanned());
@@ -60,12 +60,11 @@ public class DrivingLicenceCategoryDao {
 			int[] result=ps.executeBatch();
 			inserted=result.length==categories.size();
 			c.commit();
-		
+			System.out.println("DONEEEE ");
 		} catch (SQLException e) {
 			try {
 				c.rollback();
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			e.printStackTrace();

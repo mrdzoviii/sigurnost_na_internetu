@@ -13,7 +13,7 @@ import org.unibl.etf.sni.adminapp.util.ConnectionPool;
 public class CategoryDao {
 	private static final String SQL_SELECT= "SELECT * FROM category";
 	private static final String SQL_SELECT_BY_ID="SELECT * FROM category WHERE id=?";
-
+	private static final String SQL_SELECT_BY_NAME="SELECT * FROM category WHERE category=?";
 	
 	
 	
@@ -50,6 +50,30 @@ public class CategoryDao {
 			c = ConnectionPool.getInstance().checkOut();
 			Object pom[] = { id };
 			ps = ConnectionPool.prepareStatement(c,SQL_SELECT_BY_ID,false, pom);
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				category=new CategoryDto();
+				category.setId(rs.getInt("id"));
+				category.setCategory(rs.getString("category"));
+			}
+			ps.close();
+		} catch (Exception exp) {
+			exp.printStackTrace();
+		} finally {
+			ConnectionPool.close(ps);
+			ConnectionPool.getInstance().checkIn(c);
+		}
+		return category;
+	}
+	public static CategoryDto getByName(String id) {
+		PreparedStatement ps = null;
+		Connection c = null;
+		CategoryDto category = null;
+		ResultSet rs = null;
+		try {
+			c = ConnectionPool.getInstance().checkOut();
+			Object pom[] = { id };
+			ps = ConnectionPool.prepareStatement(c,SQL_SELECT_BY_NAME,false, pom);
 			rs = ps.executeQuery();
 			if (rs.next()) {
 				category=new CategoryDto();
