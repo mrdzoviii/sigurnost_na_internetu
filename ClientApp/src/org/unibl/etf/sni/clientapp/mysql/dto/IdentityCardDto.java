@@ -2,6 +2,7 @@ package org.unibl.etf.sni.clientapp.mysql.dto;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -87,6 +88,11 @@ public class IdentityCardDto implements Serializable,Document {
 	@Override
 	public String getCategory() {
 		return "IDENTITY CARD";
+	}
+
+	@Override
+	public List<DrivingLicenceCategoryDto> getCategories() {
+		return null;
 	}
 	
 	

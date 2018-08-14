@@ -66,9 +66,9 @@
 						<div class="#{doc.styleClass}"
 							align="center">
 							<p:outputLabel value="#{doc.category}"
-								style="font-weight:bold;float:left"></p:outputLabel>
+								style="font-weight:bold;float:left;margin-left:10px;"></p:outputLabel>
 							<h:outputText value="SERIAL: #{doc.serial}" styleClass="ad-font"
-								style="float:right" />
+								style="float:right;margin-right:10px;" />
 						</div>
  
 						<h:panelGrid columns="4" cellpadding="5">
@@ -106,6 +106,21 @@
 									timeZone="Europe/Berlin" />
 							</h:outputText>
 						</h:panelGrid>
+						<p:panel header="Categories" rendered="#{doc.category.equals('DRIVING LICENCE')}">
+						
+						<ui:repeat var="cat" value="#{doc.categories}">
+						<h:panelGrid styleClass="ui-noborder" columns="4" style="width:100%;">
+						<h:outputText value="#{cat.category.category} :   #{cat.validFrom}" styleClass="ad-font" 
+						style="margin-right:15px;margin-left:10px">
+								<f:convertDateTime for="#{cat.validFrom}" type="date" pattern="dd/MM/yyyy"
+									timeZone="Europe/Berlin" />
+							</h:outputText>
+							</h:panelGrid>
+						</ui:repeat>
+					
+						
+						</p:panel>
+						
 					</p:outputPanel>
 				</h:panelGrid>
 				<hr></hr>

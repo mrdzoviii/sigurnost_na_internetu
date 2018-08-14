@@ -4,162 +4,195 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
-<h:head>	
+<h:head>
 </h:head>
 <ui:composition>
-<h:outputStylesheet name="css/style.css"/>
-<h:outputScript name="js/script.js"></h:outputScript>
+	<h:outputStylesheet name="css/style.css" />
+	<h:outputScript name="js/script.js"></h:outputScript>
 	<h:form id="document_form" prependId="false">
-<p:growl id="error" sticky="true" globalOnly="true" life="5000">
-	<p:autoUpdate></p:autoUpdate>
-</p:growl>
-<div id="document_personal_data">
-<p:panel header="Person data:" >
-<p:panelGrid columns="3" styleClass="form ui-noborder">
+		<p:growl id="error" sticky="true" globalOnly="true" life="5000">
+			<p:autoUpdate></p:autoUpdate>
+		</p:growl>
+		<div id="document_personal_data">
+			<p:panel header="Person data:">
+				<p:panelGrid columns="3" styleClass="form ui-noborder">
 
-	<p:outputLabel for="personId" value="Person ID:"></p:outputLabel>
-	<p:inputText id="personId" value="#{adminBean.pid}" required="true" requiredMessage="Enter person id" >
-		<f:validator validatorId="org.unibl.etf.sni.adminapp.validator.PersonIdValidator"></f:validator>
-		<f:ajax event="blur" render="pid_msg"></f:ajax>
-	</p:inputText>
-	<p:message id="pid_msg" for="personId" display="text"></p:message>
-		
-	<p:outputLabel for="type" value="Documetn type:"></p:outputLabel>
-	<p:selectOneButton value="#{adminBean.type}" id="type" required="true" onchange="toogleForm()" requiredMessage="Document type must be selected." >
-            <f:selectItem itemLabel="Identity Card" itemValue="IDENTITY_CARD" />
-            <f:selectItem itemLabel="Passport" itemValue="PASSPORT" />
-            <f:selectItem itemLabel="Driving licence" itemValue="DRIVING_LICENCE" />
-            <p:ajax listener="#{adminBean.onTypeChanged}" update="document_data" ></p:ajax>
-        </p:selectOneButton>
-    <p:message for="type" display="text"></p:message>
-</p:panelGrid>
-</p:panel>
-</div>
-<h:panelGroup id="document_data" styleClass="form">
-<div id="identity_card">
-<p:panel header="Identity card:" rendered="#{adminBean.idType}" id="panel_id">
-<p:panelGrid columns="3" styleClass="ui-noborder">
-<p:outputLabel for="ic_valid_from" value="Valid from: "></p:outputLabel>
-	<p:calendar id="ic_valid_from" value="#{adminBean.validFrom}" required="#{adminBean.idType}" 
-	requiredMessage="Please select start date for identity card" navigator="true" 
-	mindate="#{adminBean.today}" pattern="dd/MM/yyyy" mask="true"></p:calendar>
-	<p:message for="ic_valid_from" display="text"></p:message>
-	<p:outputLabel for="ic_valid_until" value="Valid until: "></p:outputLabel>
-	<p:calendar id="ic_valid_until" value="#{adminBean.validUntil}" required="#{adminBean.idType}" 
-	requiredMessage="Please select end date for identity card" navigator="true" 
-	mindate="#{adminBean.today}" pattern="dd/MM/yyyy" mask="true"></p:calendar>
-	<p:message for="ic_valid_until" display="text"></p:message>
-</p:panelGrid>
-</p:panel>
-</div>
+					<p:outputLabel for="personId" value="Person ID:"></p:outputLabel>
+					<p:inputText id="personId" value="#{adminBean.pid}" required="true"
+						requiredMessage="Enter person id">
+						<f:validator
+							validatorId="org.unibl.etf.sni.adminapp.validator.PersonIdValidator"></f:validator>
+						<f:ajax event="blur" render="pid_msg"></f:ajax>
+					</p:inputText>
+					<p:message id="pid_msg" for="personId" display="text"></p:message>
 
-<div id="passport">
-<p:panel header="Passport:" rendered="#{adminBean.pType}" id="panel_p" styleClass="ui-noborder">
-<p:panelGrid columns="3" styleClass="ui-noborder">
-<p:outputLabel for="p_valid_from" value="Valid from: "></p:outputLabel>
-	<p:calendar id="p_valid_from" value="#{adminBean.validFrom}" required="#{adminBean.pType}" 
-	requiredMessage="Please select start date for passport" navigator="true" 
-	mindate="#{adminBean.today}" pattern="dd/MM/yyyy" mask="true"></p:calendar>
-	<p:message for="p_valid_from" display="text"></p:message>
-	
-	<p:outputLabel for="p_valid_until" value="Valid until: "></p:outputLabel>
-	<p:calendar id="p_valid_until" value="#{adminBean.validUntil}" required="#{adminBean.pType}" 
-	requiredMessage="Please select end date for passport" navigator="true" 
-	mindate="#{adminBean.today}" pattern="dd/MM/yyyy" mask="true"></p:calendar>
-	<p:message for="p_valid_until" display="text"></p:message>
-</p:panelGrid>
-</p:panel>
-</div>
+					<p:outputLabel for="type" value="Documetn type:"></p:outputLabel>
+					<p:selectOneButton value="#{adminBean.type}" id="type"
+						required="true" onchange="toogleForm()"
+						requiredMessage="Document type must be selected.">
+						<f:selectItem itemLabel="Identity Card" itemValue="IDENTITY_CARD" />
+						<f:selectItem itemLabel="Passport" itemValue="PASSPORT" />
+						<f:selectItem itemLabel="Driving licence"
+							itemValue="DRIVING_LICENCE" />
+						<p:ajax listener="#{adminBean.onTypeChanged}"
+							update="document_data"></p:ajax>
+					</p:selectOneButton>
+					<p:message for="type" display="text"></p:message>
+				</p:panelGrid>
+			</p:panel>
+		</div>
+		<h:panelGroup id="document_data" styleClass="form">
+			<div id="identity_card">
+				<p:panel header="Identity card:" rendered="#{adminBean.idType}"
+					id="panel_id">
+					<p:panelGrid columns="3" styleClass="ui-noborder">
+						<p:outputLabel for="ic_valid_from" value="Valid from: "></p:outputLabel>
+						<p:calendar id="ic_valid_from" value="#{adminBean.validFrom}"
+							required="#{adminBean.idType}"
+							requiredMessage="Please select start date for identity card"
+							navigator="true" mindate="#{adminBean.today}"
+							pattern="dd/MM/yyyy" mask="true"></p:calendar>
+						<p:message for="ic_valid_from" display="text"></p:message>
+						<p:outputLabel for="ic_valid_until" value="Valid until: "></p:outputLabel>
+						<p:calendar id="ic_valid_until" value="#{adminBean.validUntil}"
+							required="#{adminBean.idType}"
+							requiredMessage="Please select end date for identity card"
+							navigator="true" mindate="#{adminBean.today}"
+							pattern="dd/MM/yyyy" mask="true"></p:calendar>
+						<p:message for="ic_valid_until" display="text"></p:message>
+					</p:panelGrid>
+				</p:panel>
+			</div>
 
-<div id="driving_licence">
-<p:panel header="Driving licence:" rendered="#{adminBean.dlType}" id="panel_dl">
-<p:panelGrid columns="3" styleClass="ui-noborder">
-<p:outputLabel for="dl_valid_from" value="Valid from: "></p:outputLabel>
-	<p:calendar id="dl_valid_from" value="#{adminBean.validFrom}" required="#{adminBean.dlType}" 
-	requiredMessage="Please select start date for driving licence" navigator="true" 
-	mindate="#{adminBean.today}" pattern="dd/MM/yyyy" mask="true"></p:calendar>
-	<p:message for="dl_valid_from" display="text"></p:message>
-	
-	<p:outputLabel for="dl_valid_until" value="Valid until: "></p:outputLabel>
-	<p:calendar id="dl_valid_until" value="#{adminBean.validUntil}" required="#{adminBean.dlType}" 
-	requiredMessage="Please select end date for driving licence" navigator="true" 
-	mindate="#{adminBean.today}" pattern="dd/MM/yyyy" mask="true"></p:calendar>
-	<p:message for="dl_valid_until" display="text"></p:message>
-	
-	<p:outputLabel></p:outputLabel>
-	<p:outputLabel value="Categories:"></p:outputLabel>
-	<p:outputLabel></p:outputLabel>
-	
-	<p:outputLabel for="a" value="A: "></p:outputLabel>
-	<p:calendar id="a" value="#{adminBean.a}" navigator="true" pattern="dd/MM/yyyy" mask="true"></p:calendar>
-	<p:message for="a" display="text"></p:message>
-	
-	<p:outputLabel for="b" value="B: "></p:outputLabel>
-	<p:calendar id="b" value="#{adminBean.b}" navigator="true" pattern="dd/MM/yyyy" mask="true"></p:calendar>
-	<p:message for="b" display="text"></p:message>
-	
+			<div id="passport">
+				<p:panel header="Passport:" rendered="#{adminBean.pType}"
+					id="panel_p" styleClass="ui-noborder">
+					<p:panelGrid columns="3" styleClass="ui-noborder">
+						<p:outputLabel for="p_valid_from" value="Valid from: "></p:outputLabel>
+						<p:calendar id="p_valid_from" value="#{adminBean.validFrom}"
+							required="#{adminBean.pType}"
+							requiredMessage="Please select start date for passport"
+							navigator="true" mindate="#{adminBean.today}"
+							pattern="dd/MM/yyyy" mask="true"></p:calendar>
+						<p:message for="p_valid_from" display="text"></p:message>
 
-	<p:outputLabel for="c" value="C: "></p:outputLabel>
-	<p:calendar id="c" value="#{adminBean.c}" navigator="true" pattern="dd/MM/yyyy" mask="true"></p:calendar>
-	<p:message for="c" display="text"></p:message>
-	
+						<p:outputLabel for="p_valid_until" value="Valid until: "></p:outputLabel>
+						<p:calendar id="p_valid_until" value="#{adminBean.validUntil}"
+							required="#{adminBean.pType}"
+							requiredMessage="Please select end date for passport"
+							navigator="true" mindate="#{adminBean.today}"
+							pattern="dd/MM/yyyy" mask="true"></p:calendar>
+						<p:message for="p_valid_until" display="text"></p:message>
+					</p:panelGrid>
+				</p:panel>
+			</div>
 
-	<p:outputLabel for="d" value="D: "></p:outputLabel>
-	<p:calendar id="d" value="#{adminBean.d}" navigator="true" pattern="dd/MM/yyyy" mask="true"></p:calendar>
-	<p:message for="d" display="text"></p:message>
-	
-	<p:outputLabel for="a1" value="A1: "></p:outputLabel>
-	<p:calendar id="a1" value="#{adminBean.a1}" navigator="true" pattern="dd/MM/yyyy" mask="true"></p:calendar>
-	<p:message for="a1" display="text"></p:message>
-	
+			<div id="driving_licence">
+				<p:panel header="Driving licence:" rendered="#{adminBean.dlType}"
+					id="panel_dl">
+					<p:panelGrid columns="3" styleClass="ui-noborder">
+						<p:outputLabel for="dl_valid_from" value="Valid from: "></p:outputLabel>
+						<p:calendar id="dl_valid_from" value="#{adminBean.validFrom}"
+							required="#{adminBean.dlType}"
+							requiredMessage="Please select start date for driving licence"
+							navigator="true" mindate="#{adminBean.today}"
+							pattern="dd/MM/yyyy" mask="true"></p:calendar>
+						<p:message for="dl_valid_from" display="text"></p:message>
 
-	<p:outputLabel for="b1" value="B1: "></p:outputLabel>
-	<p:calendar id="b1" value="#{adminBean.b1}" navigator="true" pattern="dd/MM/yyyy" mask="true"></p:calendar>
-	<p:message for="b1" display="text"></p:message>
-	
-	
-	<p:outputLabel for="c1" value="C1: "></p:outputLabel>
-	<p:calendar id="c1" value="#{adminBean.c1}" navigator="true" pattern="dd/MM/yyyy" mask="true"></p:calendar>
-	<p:message for="c1" display="text"></p:message>
-	
-	
-	<p:outputLabel for="d1" value="D1: "></p:outputLabel>
-	<p:calendar id="d1" value="#{adminBean.d1}" navigator="true" pattern="dd/MM/yyyy" mask="true"></p:calendar>
-	<p:message for="d1" display="text"></p:message>
-	
-	
-	
-	<p:outputLabel for="be" value="BE: "></p:outputLabel>
-	<p:calendar id="be" value="#{adminBean.be}" navigator="true" pattern="dd/MM/yyyy" mask="true"></p:calendar>
-	<p:message for="be" display="text"></p:message>
-	
-	<p:outputLabel for="ce" value="CE: "></p:outputLabel>
-	<p:calendar id="ce" value="#{adminBean.ce}" navigator="true" pattern="dd/MM/yyyy" mask="true"></p:calendar>
-	<p:message for="ce" display="text"></p:message>
-	
+						<p:outputLabel for="dl_valid_until" value="Valid until: "></p:outputLabel>
+						<p:calendar id="dl_valid_until" value="#{adminBean.validUntil}"
+							required="#{adminBean.dlType}"
+							requiredMessage="Please select end date for driving licence"
+							navigator="true" mindate="#{adminBean.today}"
+							pattern="dd/MM/yyyy" mask="true"></p:calendar>
+						<p:message for="dl_valid_until" display="text"></p:message>
 
-	<p:outputLabel for="c1e" value="C1E: "></p:outputLabel>
-	<p:calendar id="c1e" value="#{adminBean.c1e}" navigator="true" pattern="dd/MM/yyyy" mask="true"></p:calendar>
-	<p:message for="c1e" display="text"></p:message>
-	
+						<p:outputLabel></p:outputLabel>
+						<p:outputLabel value="Categories:"></p:outputLabel>
+						<p:outputLabel></p:outputLabel>
 
-	<p:outputLabel for="de" value="DE: "></p:outputLabel>
-	<p:calendar id="de" value="#{adminBean.de}" navigator="true" pattern="dd/MM/yyyy" mask="true"></p:calendar>
-	<p:message for="de" display="text"></p:message>
-	
-	
-</p:panelGrid>
-</p:panel>
-</div>
+						<p:outputLabel for="a" value="A: "></p:outputLabel>
+						<p:calendar id="a" value="#{adminBean.a}" navigator="true"
+							pattern="dd/MM/yyyy" mask="true"></p:calendar>
+						<p:message for="a" display="text"></p:message>
 
-</h:panelGroup>
-<div id="document_submit">
-<p:commandButton id="submit" value="Submit ad"
-			styleClass="ui-priority-primary" action="#{adminBean.saveDocument}"
-			update="document_form">
-		</p:commandButton>
-</div>
-</h:form>
+						<p:outputLabel for="b" value="B: "></p:outputLabel>
+						<p:calendar id="b" value="#{adminBean.b}" navigator="true"
+							pattern="dd/MM/yyyy" mask="true"></p:calendar>
+						<p:message for="b" display="text"></p:message>
+
+
+						<p:outputLabel for="c" value="C: "></p:outputLabel>
+						<p:calendar id="c" value="#{adminBean.c}" navigator="true"
+							pattern="dd/MM/yyyy" mask="true"></p:calendar>
+						<p:message for="c" display="text"></p:message>
+
+
+						<p:outputLabel for="d" value="D: "></p:outputLabel>
+						<p:calendar id="d" value="#{adminBean.d}" navigator="true"
+							pattern="dd/MM/yyyy" mask="true"></p:calendar>
+						<p:message for="d" display="text"></p:message>
+
+						<p:outputLabel for="a1" value="A1: "></p:outputLabel>
+						<p:calendar id="a1" value="#{adminBean.a1}" navigator="true"
+							pattern="dd/MM/yyyy" mask="true"></p:calendar>
+						<p:message for="a1" display="text"></p:message>
+
+
+						<p:outputLabel for="b1" value="B1: "></p:outputLabel>
+						<p:calendar id="b1" value="#{adminBean.b1}" navigator="true"
+							pattern="dd/MM/yyyy" mask="true"></p:calendar>
+						<p:message for="b1" display="text"></p:message>
+
+
+						<p:outputLabel for="c1" value="C1: "></p:outputLabel>
+						<p:calendar id="c1" value="#{adminBean.c1}" navigator="true"
+							pattern="dd/MM/yyyy" mask="true"></p:calendar>
+						<p:message for="c1" display="text"></p:message>
+
+
+						<p:outputLabel for="d1" value="D1: "></p:outputLabel>
+						<p:calendar id="d1" value="#{adminBean.d1}" navigator="true"
+							pattern="dd/MM/yyyy" mask="true"></p:calendar>
+						<p:message for="d1" display="text"></p:message>
+
+
+
+						<p:outputLabel for="be" value="BE: "></p:outputLabel>
+						<p:calendar id="be" value="#{adminBean.be}" navigator="true"
+							pattern="dd/MM/yyyy" mask="true"></p:calendar>
+						<p:message for="be" display="text"></p:message>
+
+						<p:outputLabel for="ce" value="CE: "></p:outputLabel>
+						<p:calendar id="ce" value="#{adminBean.ce}" navigator="true"
+							pattern="dd/MM/yyyy" mask="true"></p:calendar>
+						<p:message for="ce" display="text"></p:message>
+
+
+						<p:outputLabel for="c1e" value="C1E: "></p:outputLabel>
+						<p:calendar id="c1e" value="#{adminBean.c1e}" navigator="true"
+							pattern="dd/MM/yyyy" mask="true"></p:calendar>
+						<p:message for="c1e" display="text"></p:message>
+
+
+						<p:outputLabel for="de" value="DE: "></p:outputLabel>
+						<p:calendar id="de" value="#{adminBean.de}" navigator="true"
+							pattern="dd/MM/yyyy" mask="true"></p:calendar>
+						<p:message for="de" display="text"></p:message>
+
+
+					</p:panelGrid>
+				</p:panel>
+			</div>
+
+		</h:panelGroup>
+		<div id="document_submit">
+			<p:commandButton id="submit" value="Submit ad"
+				styleClass="ui-priority-primary" action="#{adminBean.saveDocument}"
+				update="document_form">
+			</p:commandButton>
+		</div>
+	</h:form>
 </ui:composition>
 </html>
 

@@ -23,7 +23,7 @@ public class DrivingLicenceCategoryDao {
 			Object pom[] = { id };
 			ps = ConnectionPool.prepareStatement(c,SQL_SELECT_BY_DRIVING_LICENCE,false, pom);
 			rs = ps.executeQuery();
-			if (rs.next()) {
+			while (rs.next()) {
 				DrivingLicenceCategoryDto dl=new DrivingLicenceCategoryDto();
 				dl.setBanned(rs.getBoolean("banned"));
 				dl.setCategoryId(rs.getInt("category_id"));
@@ -60,7 +60,6 @@ public class DrivingLicenceCategoryDao {
 			int[] result=ps.executeBatch();
 			inserted=result.length==categories.size();
 			c.commit();
-			System.out.println("DONEEEE ");
 		} catch (SQLException e) {
 			try {
 				c.rollback();

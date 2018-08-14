@@ -2,6 +2,7 @@ package org.unibl.etf.sni.clientapp.mysql.dto;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -27,7 +28,9 @@ public class PassportDto implements Serializable,Document {
 	public String getStyleClass() {
 		return "p-title";
 	}
-	
+	public List<DrivingLicenceCategoryDto> getCategories() {
+		return null;
+	}
 	
 	public UserDto getUser() {
 		if(user==null) {

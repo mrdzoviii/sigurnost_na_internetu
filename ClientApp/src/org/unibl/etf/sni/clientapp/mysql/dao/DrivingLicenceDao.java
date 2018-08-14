@@ -34,7 +34,6 @@ private static final String SQL_SELECT_ALL="SELECT * FROM driving_licence";
 				idc.setUserId(rs.getInt("user_id"));
 				idc.setValidFrom(rs.getDate("valid_from"));
 				idc.setValidUntil(rs.getDate("valid_until"));
-				idc.setCategories(DrivingLicenceCategoryDao.getByLicenceId(idc.getId()));
 				result.add(idc);
 			}
 			ps.close();

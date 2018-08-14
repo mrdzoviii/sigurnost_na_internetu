@@ -7,6 +7,7 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.unibl.etf.sni.clientapp.mysql.dao.DrivingLicenceCategoryDao;
 import org.unibl.etf.sni.clientapp.mysql.dao.UserDao;
 
 @XmlRootElement
@@ -31,6 +32,9 @@ public class DrivingLicenceDto implements Serializable,Document{
 	
 	
 	public List<DrivingLicenceCategoryDto> getCategories() {
+		if(categories==null) {
+			categories=DrivingLicenceCategoryDao.getByLicenceId(id);
+		}
 		return categories;
 	}
 	public void setCategories(List<DrivingLicenceCategoryDto> categories) {

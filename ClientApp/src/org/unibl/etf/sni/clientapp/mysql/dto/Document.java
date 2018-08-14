@@ -1,6 +1,7 @@
 package org.unibl.etf.sni.clientapp.mysql.dto;
 
 import java.util.Date;
+import java.util.List;
 
 public interface Document {
 	Integer getId();
@@ -12,4 +13,5 @@ public interface Document {
 	UserDto getUser();
 	String getCategory();
 	String getStyleClass();
+	List<DrivingLicenceCategoryDto> getCategories();
 }
