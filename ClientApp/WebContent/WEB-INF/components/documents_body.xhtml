@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head></h:head>
+
+<ui:composition>
+	<h:outputStylesheet name="style.css"></h:outputStylesheet>
+	<div class="dashboard">
+		<h:form prependId="false" id="form">
+			<p:growl id="error" sticky="true" showDetail="true">
+				<p:autoUpdate></p:autoUpdate>
+			</p:growl>
+			<div class="filter-area" style="border-style: none;">
+			<p:panel header="Filter documents">
+				<p:panelGrid columns="4" cellpadding="5"  style="width:100%;" styleClass="ui-noborder">
+
+					<p:outputLabel value="Person ID:"></p:outputLabel>
+					<p:autoComplete id="personId" placeholder="Person id" styleClass="input-filter"
+						value="#{clientBean.pid}" 
+						completeMethod="#{clientBean.completePid}" queryDelay="100" queryEvent="keyup" minQueryLength="3">
+						<p:ajax update="docs"
+							process="personId,username,issueDate"
+							listener="#{clientBean.filterDocs}" event="keyup" />
+					</p:autoComplete>
+					
+					<p:outputLabel value="Username:"></p:outputLabel>
+					<p:autoComplete id="username" placeholder="Username:" styleClass="input-filter"
+						value="#{clientBean.username}" 
+						completeMethod="#{clientBean.completeUsername}" queryDelay="100" queryEvent="keyup" minQueryLength="3">
+						<p:ajax update="docs"
+							process="personId,username,issueDate"
+							listener="#{clientBean.filterDocs}" event="keyup" />
+					</p:autoComplete>
+					
+					<p:outputLabel for="@next" value="Date of issue:"></p:outputLabel>
+					<p:calendar styleClass="input-filter" id="issueDate" 
+						value="#{clientBean.issueDate}" navigator="true"
+					 yearRange="1900:2050"
+						pattern="dd/MM/yyyy">
+						<p:ajax update="docs"
+							process="personId,username,issueDate"
+							listener="#{clientBean.filterDocs}"
+							event="dateSelect"/>
+					</p:calendar>
+				
+						<p:outputLabel></p:outputLabel>
+					<p:commandButton value="Reset" actionListener="#{clientBean.reset}" styleClass="input-filter"
+						update="personId,issueDate,username,docs" style="float:center;">
+					
+					</p:commandButton>
+					</p:panelGrid>
+					
+
+				
+				</p:panel>
+			</div>
+		
+			<p:dataScroller id="docs" value="#{clientBean.documents}" var="doc"
+				chunkSize="10" styleClass="datascroller">
+				<f:facet name="header">Documents</f:facet>
+				<h:panelGrid columns="1" style="width:100%;">
+					<p:outputPanel>
+						<div class="#{doc.styleClass}"
+							align="center">
+							<p:outputLabel value="#{doc.category}"
+								style="font-weight:bold;float:left"></p:outputLabel>
+							<h:outputText value="SERIAL: #{doc.serial}" styleClass="ad-font"
+								style="float:right" />
+						</div>
+ 
+						<h:panelGrid columns="4" cellpadding="5">
+							
+							<h:outputText value="Name:" />
+							<h:outputText value="#{doc.user.name}" styleClass="ad-font" />
+
+							<h:outputText value="Surname:" />
+							<h:outputText value="#{doc.user.surname}" styleClass="ad-font" />
+
+							<h:outputText value="Person id:" />
+							<h:outputText value="#{doc.user.pid}" styleClass="ad-font" />
+							
+							<h:outputText value="Sex:" />
+							<h:outputText value="#{doc.user.sex ? 'male' : 'female'}" styleClass="ad-font" />
+
+							<h:outputText value="Date of birth:" />
+							<h:outputText value="#{doc.user.dateOfBirth}" styleClass="ad-font">
+								<f:convertDateTime type="date" pattern="dd/MM/yyyy"
+									timeZone="Europe/Berlin" />
+							</h:outputText>
+							
+							<h:outputText value="Birth place:" />
+							<h:outputText value="#{doc.user.placeOfBirth}" styleClass="ad-font" />
+
+							<h:outputText value="Valid from:" />
+							<h:outputText value="#{doc.validFrom}" styleClass="ad-font">
+								<f:convertDateTime type="date" pattern="dd/MM/yyyy"
+									timeZone="Europe/Berlin" />
+							</h:outputText>
+							
+							<h:outputText value="Valid until:" />
+							<h:outputText value="#{doc.validUntil}" styleClass="ad-font">
+								<f:convertDateTime type="date" pattern="dd/MM/yyyy"
+									timeZone="Europe/Berlin" />
+							</h:outputText>
+						</h:panelGrid>
+					</p:outputPanel>
+				</h:panelGrid>
+				<hr></hr>
+			</p:dataScroller>
+			
+		
+
+			
+		</h:form>
+	</div>
+	
+</ui:composition>
+
+</html>
+
+

@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>	
+</h:head>
+<ui:composition>
+  	<h:outputStylesheet name="style.css"></h:outputStylesheet>
+	<div style="background-color:#424548" align="center">
+
+ 		<p:outputLabel styleClass="header-name">Admin App</p:outputLabel>
+		<h:form enctype="multipart/form-data">
+			<p:toolbar styleClass="navbar-toolbar" id="navbar">
+				<p:toolbarGroup align="left" styleClass="navbar-button">
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+				<p:commandButton value="Logout"/>
+			</p:toolbarGroup>
+		</p:toolbar>
+		<p:sticky target="navbar"></p:sticky>
+		</h:form>
+	</div>
+</ui:composition>
+</html>
+
+
