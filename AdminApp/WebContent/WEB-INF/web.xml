@@ -23,25 +23,83 @@
     <servlet-name>Faces Servlet</servlet-name>
     <url-pattern>*.xhtml</url-pattern>
   </servlet-mapping>
-   <filter>
-    <filter-name>CAS Filter</filter-name>
-    <filter-class>edu.yale.its.tp.cas.client.filter.CASFilter</filter-class>
+  <filter>
+    <filter-name>CAS Single Sign Out Filter</filter-name>
+    <filter-class>org.jasig.cas.client.session.SingleSignOutFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>CAS Single Sign Out Filter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <listener>
+    <listener-class>org.jasig.cas.client.session.SingleSignOutHttpSessionListener</listener-class>
+  </listener>
+  <filter>
+    <filter-name>CAS Authentication Filter</filter-name>
+    <filter-class>org.jasig.cas.client.authentication.AuthenticationFilter</filter-class>
     <init-param>
-      <param-name>edu.yale.its.tp.cas.client.filter.loginUrl</param-name>
+      <param-name>casServerLoginUrl</param-name>
       <param-value>https://desktop-k7km0nm:9443/cas/login</param-value>
     </init-param>
     <init-param>
-      <param-name>edu.yale.its.tp.cas.client.filter.validateUrl</param-name>
-      <param-value>https://desktop-k7km0nm:9443/cas/serviceValidate</param-value>
+      <param-name>serverName</param-name>
+      <param-value>https://desktop-k7km0nm:9443</param-value>
     </init-param>
     <init-param>
-      <param-name>edu.yale.its.tp.cas.client.filter.serverName</param-name>
-      <param-value>desktop-k7km0nm:9443</param-value>
+      <param-name>renew</param-name>
+      <param-value>false</param-value>
+    </init-param>
+    <init-param>
+      <param-name>gateway</param-name>
+      <param-value>false</param-value>
     </init-param>
   </filter>
-
+  <filter>
+    <filter-name>CAS Validation Filter</filter-name>
+    <filter-class>org.jasig.cas.client.validation.Cas20ProxyReceivingTicketValidationFilter</filter-class>
+    <init-param>
+      <param-name>casServerUrlPrefix</param-name>
+      <param-value>https://desktop-k7km0nm:9443/cas/</param-value>
+    </init-param>
+    <init-param>
+      <param-name>serverName</param-name>
+      <param-value>https://desktop-k7km0nm:9443</param-value>
+    </init-param>
+    <init-param>
+      <param-name>proxyCallbackUrl</param-name>
+      <param-value>https://desktop-k7km0nm:9443/cas/proxyCallback</param-value>
+    </init-param>
+    <init-param>
+      <param-name>proxyReceptorUrl</param-name>
+      <param-value>/cas/proxyCallback</param-value>
+    </init-param>
+  </filter>
+  <filter>
+    <filter-name>CAS HttpServletRequest Wrapper Filter</filter-name>
+    <filter-class>org.jasig.cas.client.util.HttpServletRequestWrapperFilter</filter-class>
+  </filter>
+  <filter>
+    <filter-name>CAS Assertion Thread Local Filter</filter-name>
+    <filter-class>org.jasig.cas.client.util.AssertionThreadLocalFilter</filter-class>
+  </filter>
   <filter-mapping>
-    <filter-name>CAS Filter</filter-name>
+    <filter-name>CAS Authentication Filter</filter-name>
     <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>CAS Validation Filter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>CAS HttpServletRequest Wrapper Filter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>CAS Assertion Thread Local Filter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>CAS Validation Filter</filter-name>
+    <url-pattern>/proxyCallback</url-pattern>
   </filter-mapping>
 </web-app>

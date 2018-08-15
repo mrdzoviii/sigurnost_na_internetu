@@ -10,18 +10,30 @@ public class TokenDto {
 	private UserDto user;
 	private Date validUntil;
 	private String token;
+	private Boolean sso;
 	
+	
+	
+	public Boolean getSso() {
+		return sso;
+	}
+
+	public void setSso(Boolean sso) {
+		this.sso = sso;
+	}
+
 	public TokenDto() {
 		super();
 	}
 	
-	public TokenDto(Integer id, Integer userId, UserDto user, Date validUntil,String token) {
+	public TokenDto(Integer id, Integer userId, UserDto user, Date validUntil,String token,Boolean sso) {
 		super();
 		this.id = id;
 		this.userId = userId;
 		this.user = user;
 		this.validUntil = validUntil;
 		this.token=token;
+		this.sso=sso;
 	}
 	public String getToken() {
 		return token;

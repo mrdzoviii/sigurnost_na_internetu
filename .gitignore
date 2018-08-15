@@ -37,7 +37,7 @@ Servers/*.server
 *.apk
 *.ap_
 */caches/*
-
+/LoginApp/*
 # Files for the ART/Dalvik VM
 *.dex
 

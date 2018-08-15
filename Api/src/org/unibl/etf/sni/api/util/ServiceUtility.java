@@ -49,9 +49,10 @@ public class ServiceUtility {
 						String genToken = tokenGenerator();
 						if (token != null) {
 							token.setToken(genToken);
+							token.setSso(false);
 							token.setValidUntil(new Date(System.currentTimeMillis() + 30 * 60 * 1000));
-							if (TokenDao.update(token))
-								;
+							System.out.println(token.getValidUntil()+"    "+token.getToken());
+							if (TokenDao.update(token));
 							new Thread(new Runnable() {
 								@Override
 								public void run() {
@@ -62,7 +63,7 @@ public class ServiceUtility {
 							return token.getToken() + "#" + token.getValidUntil().getTime();
 						} else {
 							token = new TokenDto(null, user.getId(), user,
-									new Date(System.currentTimeMillis() + 30 * 60 * 1000), genToken);
+									new Date(System.currentTimeMillis() + 30 * 60 * 1000), genToken,false);
 							if (TokenDao.insert(token)) {
 								new Thread(new Runnable() {
 									@Override

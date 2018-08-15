@@ -13,8 +13,8 @@ import org.unibl.etf.sni.adminapp.util.ConnectionPool;
 public class TokenDao {
 	private static final String SQL_SELECT = "SELECT * FROM token";
 	private static final String SQL_SELECT_BY_USER_ID="SELECT * FROM token WHERE user_id=?";
-	private static final String SQL_UPDATE="UPDATE token SET token=?,valid_until=? WHERE user_id=?";
-	private static final String SQL_INSERT="INSERT INTO token values (?,?,?,?)";
+	private static final String SQL_UPDATE="UPDATE token SET token=?,valid_until=? ,sso=? WHERE user_id=?";
+	private static final String SQL_INSERT="INSERT INTO token values (?,?,?,?,?)";
 	
 	public static boolean update(TokenDto token) {
 		PreparedStatement ps = null;
@@ -22,7 +22,7 @@ public class TokenDao {
 		boolean result=false;
 		try {
 			c = ConnectionPool.getInstance().checkOut();
-			Object pom[] = {token.getToken(),token.getValidUntil(),token.getUserId() };
+			Object pom[] = {token.getToken(),token.getValidUntil(),token.getSso(),token.getUserId() };
 			ps = ConnectionPool.prepareStatement(c, SQL_UPDATE, false, pom);
 			int rows=ps.executeUpdate();
 			result=rows>0;
@@ -43,7 +43,7 @@ public class TokenDao {
 		try {
 			c = ConnectionPool.getInstance().checkOut();
 			String query = SQL_INSERT;
-			Object pom[] = { null,token.getToken(),token.getValidUntil(),token.getUserId()};
+			Object pom[] = { null,token.getToken(),token.getValidUntil(),token.getUserId(),token.getSso()};
 			ps = ConnectionPool.prepareStatement(c, query, true, pom);
 			ps.executeUpdate();
 			inserted=ps.getGeneratedKeys().next();
@@ -71,6 +71,7 @@ public class TokenDao {
 				token.setValidUntil(rs.getTimestamp("valid_until"));
 				token.setUserId(rs.getInt("user_id"));
 				token.setToken(rs.getString("token"));
+				token.setSso(rs.getBoolean("sso"));
 				result.add(token);
 			}
 			ps.close();
@@ -98,6 +99,7 @@ public class TokenDao {
 				token.setValidUntil(rs.getTimestamp("valid_until"));
 				token.setUserId(rs.getInt("user_id"));
 				token.setToken(rs.getString("token"));
+				token.setSso(rs.getBoolean("sso"));
 			}
 			ps.close();
 		} catch (Exception exp) {

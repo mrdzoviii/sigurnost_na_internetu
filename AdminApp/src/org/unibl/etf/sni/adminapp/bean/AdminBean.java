@@ -1,5 +1,6 @@
 package org.unibl.etf.sni.adminapp.bean;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,16 +11,19 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
 
 import org.unibl.etf.sni.adminapp.mysql.dao.CategoryDao;
 import org.unibl.etf.sni.adminapp.mysql.dao.DrivingLicenceDao;
 import org.unibl.etf.sni.adminapp.mysql.dao.IdentityCardDao;
 import org.unibl.etf.sni.adminapp.mysql.dao.PassportDao;
+import org.unibl.etf.sni.adminapp.mysql.dao.TokenDao;
 import org.unibl.etf.sni.adminapp.mysql.dao.UserDao;
 import org.unibl.etf.sni.adminapp.mysql.dto.DrivingLicenceCategoryDto;
 import org.unibl.etf.sni.adminapp.mysql.dto.DrivingLicenceDto;
 import org.unibl.etf.sni.adminapp.mysql.dto.IdentityCardDto;
 import org.unibl.etf.sni.adminapp.mysql.dto.PassportDto;
+import org.unibl.etf.sni.adminapp.mysql.dto.TokenDto;
 import org.unibl.etf.sni.adminapp.mysql.dto.UserDto;
 import org.unibl.etf.sni.adminapp.util.ServiceUtility;
 
@@ -41,6 +45,7 @@ public class AdminBean implements Serializable {
 	private Date validFrom;
 	private Date validUntil;
 	private String type;
+	private String code;
 	private boolean pType=false;
 	private boolean idType=true;
 	private boolean dlType=false;
@@ -63,6 +68,7 @@ public class AdminBean implements Serializable {
 	@PostConstruct
 	public void init() {
 		clear();
+		code="";
 	}
 	
 	
@@ -204,8 +210,45 @@ public class AdminBean implements Serializable {
 	}
 	
 	// getters and setters
+	public void verify() {
+		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+		UserDto user=(UserDto) session.getAttribute("user");
+		TokenDto token=TokenDao.getByUserId(user.getId());
+		if(token==null) {
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
+					"Get verification code from android app", "");
+			FacesContext.getCurrentInstance().addMessage(null, message);
+			return;
+		}
+		System.out.println(token.getToken());
+		if(token.getToken().equals(code)) {
+			token.setSso(true);
+			TokenDao.update(token);
+			FacesContext.getCurrentInstance().getApplication().getNavigationHandler()
+			.handleNavigation(FacesContext.getCurrentInstance(), null, "index.xhtml?faces-redirect=true");
+			return;
+		}
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Wrong code", "");
+			FacesContext.getCurrentInstance().addMessage(null, message);
+			return;
+	}
 	
 	
+	public void logout() {
+		try {
+			FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+			FacesContext.getCurrentInstance().getExternalContext().redirect("https://desktop-k7km0nm:9443/cas/logout");
+			HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+			UserDto user=(UserDto) session.getAttribute("user");
+			TokenDto token=TokenDao.getByUserId(user.getId());
+			token.setSso(false);
+			TokenDao.update(token);
+			session.removeAttribute("user");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public String getType() {
 		return type;
@@ -376,6 +419,18 @@ public class AdminBean implements Serializable {
 	}
 	public void setDe(Date de) {
 		this.de = de;
+	}
+
+
+
+	public String getCode() {
+		return code;
+	}
+
+
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 	
 	
