@@ -107,7 +107,7 @@
     <!-- Define an AJP 1.3 Connector on port 8009 -->
     <Connector port="9009" protocol="AJP/1.3" redirectPort="9443"/>
     
-     <Connector SSLEnabled="true" clientAuth="true" keyalias="web_app_server" keystoreFile="conf/keystore.jks" keystorePass="lozzinka" keystoreType="JKS" maxThreads="200" port="9443" protocol="org.apache.coyote.http11.Http11NioProtocol" scheme="https" secure="true" sslProtocol="TLSv1" truststoreFile="conf/truststore.jks" truststorePass="lozzinka" truststoreType="JKS"/>
+     <Connector SSLEnabled="true" clientAuth="want" keyalias="web_app_server" keystoreFile="conf/keystore.jks" keystorePass="lozzinka" keystoreType="JKS" maxThreads="200" port="9443" protocol="org.apache.coyote.http11.Http11NioProtocol" scheme="https" secure="true" sslProtocol="TLSv1" truststoreFile="conf/truststore.jks" truststorePass="lozzinka" truststoreType="JKS"/>
 
 	
 

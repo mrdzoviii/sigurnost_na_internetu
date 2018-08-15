@@ -10,17 +10,6 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
-  <!-- 
-  <security-constraint>
-    <web-resource-collection>
-      <web-resource-name>AdminApp</web-resource-name>
-      <url-pattern>/*</url-pattern>
-    </web-resource-collection>
-    <user-data-constraint>
-      <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-    </user-data-constraint>
-  </security-constraint>
-   -->
   <context-param>
     <param-name>primefaces.THEME</param-name>
     <param-value>home</param-value>
@@ -34,4 +23,25 @@
     <servlet-name>Faces Servlet</servlet-name>
     <url-pattern>*.xhtml</url-pattern>
   </servlet-mapping>
+   <filter>
+    <filter-name>CAS Filter</filter-name>
+    <filter-class>edu.yale.its.tp.cas.client.filter.CASFilter</filter-class>
+    <init-param>
+      <param-name>edu.yale.its.tp.cas.client.filter.loginUrl</param-name>
+      <param-value>https://desktop-k7km0nm:9443/cas/login</param-value>
+    </init-param>
+    <init-param>
+      <param-name>edu.yale.its.tp.cas.client.filter.validateUrl</param-name>
+      <param-value>https://desktop-k7km0nm:9443/cas/serviceValidate</param-value>
+    </init-param>
+    <init-param>
+      <param-name>edu.yale.its.tp.cas.client.filter.serverName</param-name>
+      <param-value>desktop-k7km0nm:9443</param-value>
+    </init-param>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>CAS Filter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
 </web-app>
