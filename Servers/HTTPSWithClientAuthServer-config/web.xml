@@ -110,7 +110,7 @@
     </servlet>
     <security-constraint>
     <web-resource-collection>
-        <web-resource-name>HTTTPS</web-resource-name>
+        <web-resource-name>*</web-resource-name>
         <url-pattern>/*</url-pattern>
     </web-resource-collection>
     <user-data-constraint>

@@ -1,4 +1,7 @@
 package org.unibl.etf.sni.clientapp.util;
+
+import java.util.Date;
+
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;
@@ -32,19 +35,22 @@ public class AccessListener implements PhaseListener {
 		System.out.println(req.getRequestURI());
 		if (req.getRequestURI().contains("jsessionid") || req.getRequestURI().endsWith("/")) {
 			if (user != null) {
-				session.setAttribute("user",user);
-				TokenDto token=TokenDao.getByUserId(user.getId());
-					if(token!=null && token.getSso()) {
-					address = "index.xhtml?faces-redirect=true";
-					}else {
-					
-						address="verify.xhtml?faces-redirect=true";
-					}		
+				session.setAttribute("user", user);
+				TokenDto token = TokenDao.getByUserId(user.getId());
+				if (token != null) {
+					if (token.getSso() && token.getValidUntil().after(new Date(System.currentTimeMillis()))) {
+						address = "index.xhtml?faces-redirect=true";
+					} else {
+						address = "verify.xhtml?faces-redirect=true";
+					}
+				}else {
+					address = "verify.xhtml?faces-redirect=true";
+				}
 			}
-		
+
 			if (!resp.isCommitted()) {
-				cxt.getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(),
-						null, address);
+				cxt.getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null,
+						address);
 				cxt.responseComplete();
 			}
 		}

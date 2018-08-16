@@ -14,65 +14,78 @@
 				<p:autoUpdate></p:autoUpdate>
 			</p:growl>
 			<div class="filter-area" style="border-style: none;">
-			<p:panel header="Filter documents">
-				<p:panelGrid columns="4" cellpadding="5"  style="width:100%;" styleClass="ui-noborder">
+				<p:panel header="Filter documents"
+					>
+					<p:panelGrid columns="4" cellpadding="5" style="width:100%;"
+						styleClass="ui-noborder">
 
-					<p:outputLabel value="Person ID:"></p:outputLabel>
-					<p:autoComplete id="personId" placeholder="Person id" styleClass="input-filter"
-						value="#{clientBean.pid}" 
-						completeMethod="#{clientBean.completePid}" queryDelay="100" queryEvent="keyup" minQueryLength="3">
-						<p:ajax update="docs"
-							process="personId,username,issueDate"
-							listener="#{clientBean.filterDocs}" event="keyup" />
-					</p:autoComplete>
-					
-					<p:outputLabel value="Username:"></p:outputLabel>
-					<p:autoComplete id="username" placeholder="Username:" styleClass="input-filter"
-						value="#{clientBean.username}" 
-						completeMethod="#{clientBean.completeUsername}" queryDelay="100" queryEvent="keyup" minQueryLength="3">
-						<p:ajax update="docs"
-							process="personId,username,issueDate"
-							listener="#{clientBean.filterDocs}" event="keyup" />
-					</p:autoComplete>
-					
-					<p:outputLabel for="@next" value="Date of issue:"></p:outputLabel>
-					<p:calendar styleClass="input-filter" id="issueDate" 
-						value="#{clientBean.issueDate}" navigator="true"
-					 yearRange="1900:2050"
-						pattern="dd/MM/yyyy">
-						<p:ajax update="docs"
-							process="personId,username,issueDate"
-							listener="#{clientBean.filterDocs}"
-							event="dateSelect"/>
-					</p:calendar>
-				
+						<p:outputLabel value="Person ID:" rendered="#{sessionScope.user.admin}" ></p:outputLabel>
+						<p:autoComplete id="personId" placeholder="Person id"
+							styleClass="input-filter" value="#{clientBean.pid}" rendered="#{sessionScope.user.admin}"
+							completeMethod="#{clientBean.completePid}" queryDelay="100"
+							queryEvent="keyup" minQueryLength="3">
+							<p:ajax update="docs" process="personId,username,issueDate"
+								listener="#{clientBean.filterDocs}" event="keyup" />
+						</p:autoComplete>
+
+						<p:outputLabel value="Username:" rendered="#{sessionScope.user.admin}" ></p:outputLabel>
+						<p:autoComplete id="username" placeholder="Username:" rendered="#{sessionScope.user.admin}"
+							styleClass="input-filter" value="#{clientBean.username}"
+							completeMethod="#{clientBean.completeUsername}" queryDelay="100"
+							queryEvent="keyup" minQueryLength="3">
+							<p:ajax update="docs" process="personId,username,issueDate"
+								listener="#{clientBean.filterDocs}" event="keyup" />
+						</p:autoComplete>
+
+						<p:outputLabel for="@next" value="Date of issue:"></p:outputLabel>
+						<p:calendar styleClass="input-filter" id="issueDate"
+							value="#{clientBean.issueDate}" navigator="true"
+							yearRange="1900:2050" pattern="dd/MM/yyyy">
+							<p:ajax update="docs" process="personId,username,issueDate"
+								listener="#{clientBean.filterDocs}" event="dateSelect" />
+						</p:calendar>
+						
+						<p:outputLabel value="Serial:"></p:outputLabel>
+						<p:autoComplete id="serial" placeholder="Serial:"
+							styleClass="input-filter" value="#{clientBean.serial}"
+							completeMethod="#{clientBean.completeSerial}" queryDelay="100"
+							queryEvent="keyup" minQueryLength="3">
+							<p:ajax update="docs" process="personId,username,issueDate,serial"
+								listener="#{clientBean.filterDocs}" event="keyup" />
+						</p:autoComplete>
+						
 						<p:outputLabel></p:outputLabel>
-					<p:commandButton value="Reset" actionListener="#{clientBean.reset}" styleClass="input-filter"
-						update="personId,issueDate,username,docs" style="float:center;">
-					
-					</p:commandButton>
+						
 					</p:panelGrid>
-					
-
-				
+					<p:commandButton value="Reset"
+							actionListener="#{clientBean.reset}" styleClass="input-filter"
+							update="personId,issueDate,username,docs" style="float:center;">
+						</p:commandButton>
 				</p:panel>
 			</div>
-		
+
 			<p:dataScroller id="docs" value="#{clientBean.documents}" var="doc"
 				chunkSize="10" styleClass="datascroller">
 				<f:facet name="header">Documents</f:facet>
 				<h:panelGrid columns="1" style="width:100%;">
 					<p:outputPanel>
-						<div class="#{doc.styleClass}"
-							align="center">
-							<p:outputLabel value="#{doc.category}"
-								style="font-weight:bold;float:left;margin-left:10px;"></p:outputLabel>
+						<div class="#{doc.styleClass}" align="center">
 							<h:outputText value="SERIAL: #{doc.serial}" styleClass="ad-font"
-								style="float:right;margin-right:10px;" />
-						</div>
- 
-						<h:panelGrid columns="4" cellpadding="5">
+								style="float:left;margin-left:10px;margin-top:5px;" />
+								<p:commandButton value="GET DOCUMENT" rendered="#{sessionScope.user.pid.equals(doc.user.pid)}"
+						action="#{clientBean.getDocument}" ajax="false"
+						styleClass="input-filter"
+						style="float:right;vertical-align:middle;margin-left:10px;">
+						  <f:setPropertyActionListener target="#{clientBean.selectedDocument}" value="#{doc}" />
+					</p:commandButton>
+							<p:outputLabel value="#{doc.category}"
+								style="font-weight:bold;float:right;margin-right:10px;margin-top:5px;"></p:outputLabel>
 							
+
+						</div>
+
+						<h:panelGrid columns="4" cellpadding="5">
+
 							<h:outputText value="Name:" />
 							<h:outputText value="#{doc.user.name}" styleClass="ad-font" />
 
@@ -81,57 +94,64 @@
 
 							<h:outputText value="Person id:" />
 							<h:outputText value="#{doc.user.pid}" styleClass="ad-font" />
-							
+
 							<h:outputText value="Sex:" />
-							<h:outputText value="#{doc.user.sex ? 'male' : 'female'}" styleClass="ad-font" />
+							<h:outputText value="#{doc.user.sex ? 'male' : 'female'}"
+								styleClass="ad-font" />
 
 							<h:outputText value="Date of birth:" />
-							<h:outputText value="#{doc.user.dateOfBirth}" styleClass="ad-font">
+							<h:outputText value="#{doc.user.dateOfBirth}"
+								styleClass="ad-font">
 								<f:convertDateTime type="date" pattern="dd/MM/yyyy"
 									timeZone="Europe/Berlin" />
 							</h:outputText>
-							
+
 							<h:outputText value="Birth place:" />
-							<h:outputText value="#{doc.user.placeOfBirth}" styleClass="ad-font" />
+							<h:outputText value="#{doc.user.placeOfBirth}"
+								styleClass="ad-font" />
 
 							<h:outputText value="Valid from:" />
 							<h:outputText value="#{doc.validFrom}" styleClass="ad-font">
 								<f:convertDateTime type="date" pattern="dd/MM/yyyy"
 									timeZone="Europe/Berlin" />
 							</h:outputText>
-							
+
 							<h:outputText value="Valid until:" />
 							<h:outputText value="#{doc.validUntil}" styleClass="ad-font">
 								<f:convertDateTime type="date" pattern="dd/MM/yyyy"
 									timeZone="Europe/Berlin" />
 							</h:outputText>
 						</h:panelGrid>
-						<p:panel header="Categories" rendered="#{doc.category.equals('DRIVING LICENCE')}">
-						
-						<ui:repeat var="cat" value="#{doc.categories}">
-						<h:panelGrid styleClass="ui-noborder" columns="4" style="width:100%;">
-						<h:outputText value="#{cat.category.category} :   #{cat.validFrom}" styleClass="ad-font" 
-						style="margin-right:15px;margin-left:10px">
-								<f:convertDateTime for="#{cat.validFrom}" type="date" pattern="dd/MM/yyyy"
-									timeZone="Europe/Berlin" />
-							</h:outputText>
-							</h:panelGrid>
-						</ui:repeat>
-					
-						
+						<p:panel header="Categories"
+							rendered="#{doc.category.equals('DRIVING LICENCE')}">
+
+							<ui:repeat var="cat" value="#{doc.categories}">
+								<h:panelGrid styleClass="ui-noborder" columns="4"
+									style="width:100%;">
+									<h:outputText
+										value="#{cat.category.category} :   #{cat.validFrom}"
+										styleClass="ad-font"
+										style="margin-right:15px;margin-left:10px">
+										<f:convertDateTime for="#{cat.validFrom}" type="date"
+											pattern="dd/MM/yyyy" timeZone="Europe/Berlin" />
+									</h:outputText>
+								</h:panelGrid>
+							</ui:repeat>
+
+
 						</p:panel>
-						
+
 					</p:outputPanel>
 				</h:panelGrid>
 				<hr></hr>
 			</p:dataScroller>
-			
-		
 
-			
+
+
+
 		</h:form>
 	</div>
-	
+
 </ui:composition>
 
 </html>

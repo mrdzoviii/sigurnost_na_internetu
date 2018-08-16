@@ -81,5 +81,8 @@ public class ServiceUtility {
 		return documents;
 	}
 
+	public static byte[] getPdf(Document doc) {
+		return PdfDocument.makePdf(doc);
+	}
 	
 }

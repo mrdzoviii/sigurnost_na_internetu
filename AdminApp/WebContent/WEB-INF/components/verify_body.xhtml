@@ -18,8 +18,9 @@
 				<p:panelGrid columns="2" cellpadding="0"  styleClass="ui-noborder">
 
 					<p:outputLabel value="Verification code:"></p:outputLabel>
-					<p:inputText id="code" placeholder="Verification code" styleClass="input-filter"
+					<p:inputText id="code" placeholder="Verification code" styleClass="input-filter" required="true" requiredMessage="Enter code" validatorMessage="Enter valid code"
 						value="#{adminBean.code}" >
+						<f:validateRegex pattern="^[0-9A-Z]{8}$"></f:validateRegex>
 					</p:inputText>
 					</p:panelGrid>
 					<p:commandButton value="Verify" actionListener="#{adminBean.verify}" styleClass="input-filter"

@@ -1,4 +1,6 @@
 package org.unibl.etf.sni.adminapp.util;
+import java.util.Date;
+
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;
@@ -35,13 +37,15 @@ public class AccessListener implements PhaseListener {
 			if (user != null) {
 				TokenDto token=TokenDao.getByUserId(user.getId());
 				session.setAttribute("user",user);
-				System.out.println("ADMIN:"+user.getAdmin()+"username:"+user.getUsername());
 				if (user.getAdmin()) {
-					if(token!=null && token.getSso()) {
-					address = "index.xhtml?faces-redirect=true";
+					if (token != null) {
+						if (token.getSso() && token.getValidUntil().after(new Date(System.currentTimeMillis()))) {
+							address = "index.xhtml?faces-redirect=true";
+						} else {
+							address = "verify.xhtml?faces-redirect=true";
+						}
 					}else {
-						
-						address="verify.xhtml?faces-redirect=true";
+						address = "verify.xhtml?faces-redirect=true";
 					}
 
 				} else {

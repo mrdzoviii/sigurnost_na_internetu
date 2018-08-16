@@ -143,7 +143,7 @@ body {
 	border-color: orange;
 	border-radius: 4px;
 	padding-top: 10px;
-	padding-bottom: 40px;
+	padding-bottom: 45px;
 }
 
 .p-title {
@@ -154,7 +154,7 @@ body {
 	border-color: green;
 	border-radius: 4px;
 	padding-top: 10px;
-	padding-bottom: 40px;
+	padding-bottom: 45px;
 }
 
 .dl-title {
@@ -165,7 +165,7 @@ body {
 	border-color: blue;
 	border-radius: 4px;
 	padding-top: 10px;
-	padding-bottom: 40px;
+	padding-bottom: 45px;
 }
 
 .filter-area {

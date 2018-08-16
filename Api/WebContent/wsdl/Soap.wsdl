@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions targetNamespace="http://soap.sni.etf.unibl.org" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://soap.sni.etf.unibl.org" xmlns:intf="http://soap.sni.etf.unibl.org" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<wsdl:definitions targetNamespace="http://soap.api.sni.etf.unibl.org" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://soap.api.sni.etf.unibl.org" xmlns:intf="http://soap.api.sni.etf.unibl.org" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 <!--WSDL created by Apache Axis version: 1.4
 Built on Apr 22, 2006 (06:55:48 PDT)-->
  <wsdl:types>
-  <schema elementFormDefault="qualified" targetNamespace="http://soap.sni.etf.unibl.org" xmlns="http://www.w3.org/2001/XMLSchema">
+  <schema elementFormDefault="qualified" targetNamespace="http://soap.api.sni.etf.unibl.org" xmlns="http://www.w3.org/2001/XMLSchema">
    <element name="getDocumentsByDate">
     <complexType>
      <sequence>
@@ -23,17 +23,17 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
   </schema>
  </wsdl:types>
 
-   <wsdl:message name="getDocumentsByDateRequest">
+   <wsdl:message name="getDocumentsByDateResponse">
 
-      <wsdl:part element="impl:getDocumentsByDate" name="parameters">
+      <wsdl:part element="impl:getDocumentsByDateResponse" name="parameters">
 
       </wsdl:part>
 
    </wsdl:message>
 
-   <wsdl:message name="getDocumentsByDateResponse">
+   <wsdl:message name="getDocumentsByDateRequest">
 
-      <wsdl:part element="impl:getDocumentsByDateResponse" name="parameters">
+      <wsdl:part element="impl:getDocumentsByDate" name="parameters">
 
       </wsdl:part>
 

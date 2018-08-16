@@ -15,11 +15,12 @@
 			</p:growl>
 			<div class="filter-area" style="border-style: none;">
 			<p:panel header="Verify">
-				<p:panelGrid columns="2" cellpadding="0"  style="width:100%;" styleClass="ui-noborder">
+				<p:panelGrid columns="2" cellpadding="0"  styleClass="ui-noborder">
 
 					<p:outputLabel value="Verification code:"></p:outputLabel>
 					<p:inputText id="code" placeholder="Verification code" styleClass="input-filter"
-						value="#{clientBean.code}" >
+						value="#{clientBean.code}" required="true" requiredMessage="Enter verification code" validatorMessage="Enter valid verification code">
+					<f:validateRegex pattern="^[0-9A-Z]{8}$"></f:validateRegex>
 					</p:inputText>
 					</p:panelGrid>
 					<p:commandButton value="Verify" actionListener="#{clientBean.verify}" styleClass="input-filter"
