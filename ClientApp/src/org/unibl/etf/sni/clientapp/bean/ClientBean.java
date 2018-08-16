@@ -173,8 +173,7 @@ public class ClientBean implements Serializable {
 	}
 
 	public void reset() {
-		documents.clear();
-		documents.addAll(data);
+		onload();
 		pid = "";
 		username = "";
 		issueDate = null;

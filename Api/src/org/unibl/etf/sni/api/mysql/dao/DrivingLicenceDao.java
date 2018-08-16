@@ -11,16 +11,48 @@ import java.util.List;
 import org.unibl.etf.sni.api.mysql.dto.DrivingLicenceDto;
 import org.unibl.etf.sni.api.util.ConnectionPool;
 
+
+
 public class DrivingLicenceDao {
 	private static final String SQL_SELECT_BY_DATE="SELECT * FROM driving_licence WHERE valid_from=?";
 	private static final String SQL_SELECT_BY_UID="SELECT i.* FROM driving_licence i INNER JOIN user u ON i.user_id=u.id WHERE u.pid=?";
 	private static final String SQL_INSERT="INSERT INTO driving_licence VALUES (?,?,?,?,?,?)";
+private static final String SQL_SELECT_ALL="SELECT * FROM driving_licence";
 	
+	public static List<DrivingLicenceDto> getAll() {
+		PreparedStatement ps = null;
+		Connection c = null;
+		List<DrivingLicenceDto> result = new ArrayList<>();
+		ResultSet rs = null;
+		try {
+			c = ConnectionPool.getInstance().checkOut();
+			ps = c.prepareStatement(SQL_SELECT_ALL);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				DrivingLicenceDto idc=new DrivingLicenceDto();
+				idc.setId(rs.getInt("id"));
+				idc.setSerial(rs.getString("serial"));
+				idc.setStatus(rs.getBoolean("status"));
+				idc.setUserId(rs.getInt("user_id"));
+				idc.setValidFrom(rs.getDate("valid_from"));
+				idc.setValidUntil(rs.getDate("valid_until"));
+				result.add(idc);
+			}
+			ps.close();
+		} catch (Exception exp) {
+			exp.printStackTrace();
+		} finally {
+			ConnectionPool.close(ps);
+			ConnectionPool.getInstance().checkIn(c);
+		}
+		return result;
+	}
 	
 	
 	public static boolean insert(DrivingLicenceDto idc) {
 		PreparedStatement ps = null;
 		Connection c = null;
+		ResultSet rs=null;
 		boolean inserted=false;
 		try {
 			c = ConnectionPool.getInstance().checkOut();
@@ -28,9 +60,11 @@ public class DrivingLicenceDao {
 			Object pom[] = { null,idc.getValidFrom(),idc.getValidUntil(),idc.getStatus(),idc.getUserId(),idc.getSerial()};
 			ps = ConnectionPool.prepareStatement(c, SQL_INSERT, true, pom);
 			ps.executeUpdate();
-			inserted=ps.getGeneratedKeys().next();
+			rs=ps.getGeneratedKeys();
+			inserted=rs.next();
 			if(inserted) {
-				DrivingLicenceCategoryDao.batchInsert(idc.getCategories());
+				System.out.println(rs.getLong(1));
+				DrivingLicenceCategoryDao.batchInsert(rs.getLong(1),idc.getCategories());
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -81,7 +115,7 @@ public class DrivingLicenceDao {
 			Object pom[] = { uid };
 			ps = ConnectionPool.prepareStatement(c,SQL_SELECT_BY_UID,false, pom);
 			rs = ps.executeQuery();
-			if (rs.next()) {
+			while (rs.next()) {
 				DrivingLicenceDto idc=new DrivingLicenceDto();
 				idc.setId(rs.getInt("id"));
 				idc.setSerial(rs.getString("serial"));

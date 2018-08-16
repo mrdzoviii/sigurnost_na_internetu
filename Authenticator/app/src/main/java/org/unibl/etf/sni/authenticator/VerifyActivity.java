@@ -23,7 +23,7 @@ public class VerifyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verify);
         verificationCode = findViewById(R.id.verificationCode);
-        btnDate=findViewById(R.id.btnDate);
+        btnDate=findViewById(R.id.btnPid);
         btnName=findViewById(R.id.btnName);
         verify=findViewById(R.id.btnVerify);
     }
@@ -59,7 +59,9 @@ public class VerifyActivity extends AppCompatActivity {
 
         if(bean.getToken().equals(code) && bean.getValidUntil().after(new Date())){
             Toast.makeText(this,"Confirmed",Toast.LENGTH_LONG).show();
-            btnDate.setVisibility(View.VISIBLE);
+            if(bean.getAdmin()) {
+                btnDate.setVisibility(View.VISIBLE);
+            }
             btnName.setVisibility(View.VISIBLE);
             verificationCode.setVisibility(View.INVISIBLE);
             verify.setVisibility(View.INVISIBLE);

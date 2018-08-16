@@ -34,7 +34,7 @@
         app:layout_constraintTop_toBottomOf="@+id/verificationCode" />
 
     <Button
-        android:id="@+id/btnDate"
+        android:id="@+id/btnPid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="80dp"
@@ -57,6 +57,6 @@
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.088"
-        app:layout_constraintStart_toEndOf="@+id/btnDate"
+        app:layout_constraintStart_toEndOf="@+id/btnPid"
         app:layout_constraintTop_toBottomOf="@+id/btnVerify" />
 </android.support.constraint.ConstraintLayout>

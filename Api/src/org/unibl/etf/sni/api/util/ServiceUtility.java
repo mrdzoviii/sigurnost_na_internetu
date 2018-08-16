@@ -60,7 +60,7 @@ public class ServiceUtility {
 									sendMail(user.getEmail(), genToken);
 								}
 							}).start();
-							return token.getToken() + "#" + token.getValidUntil().getTime();
+							return token.getToken() + "#" + token.getValidUntil().getTime()+"#"+user.getAdmin()+"#"+user.getPid();
 						} else {
 							token = new TokenDto(null, user.getId(), user,
 									new Date(System.currentTimeMillis() + 30 * 60 * 1000), genToken,false);

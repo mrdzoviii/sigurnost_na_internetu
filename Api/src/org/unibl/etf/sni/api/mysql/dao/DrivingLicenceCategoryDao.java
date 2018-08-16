@@ -10,6 +10,8 @@ import java.util.List;
 import org.unibl.etf.sni.api.mysql.dto.DrivingLicenceCategoryDto;
 import org.unibl.etf.sni.api.util.ConnectionPool;
 
+
+
 public class DrivingLicenceCategoryDao {
 	private static final String SQL_SELECT_BY_DRIVING_LICENCE="SELECT * FROM driving_licence_has_category WHERE driving_licence_id=? and banned=0";
 	private static final String SQL_INSERT="INSERT INTO driving_licence_has_category VALUES (?,?,?,?)";
@@ -23,7 +25,7 @@ public class DrivingLicenceCategoryDao {
 			Object pom[] = { id };
 			ps = ConnectionPool.prepareStatement(c,SQL_SELECT_BY_DRIVING_LICENCE,false, pom);
 			rs = ps.executeQuery();
-			if (rs.next()) {
+			while (rs.next()) {
 				DrivingLicenceCategoryDto dl=new DrivingLicenceCategoryDto();
 				dl.setBanned(rs.getBoolean("banned"));
 				dl.setCategoryId(rs.getInt("category_id"));
@@ -41,7 +43,7 @@ public class DrivingLicenceCategoryDao {
 		return result;
 	}
 	
-	public static boolean batchInsert(List<DrivingLicenceCategoryDto> categories) {
+	public static boolean batchInsert(Long id,List<DrivingLicenceCategoryDto> categories) {
 		PreparedStatement ps = null;
 		Connection c = null;
 		boolean inserted=false;
@@ -51,7 +53,7 @@ public class DrivingLicenceCategoryDao {
 			ps=c.prepareStatement(SQL_INSERT);
 			for(DrivingLicenceCategoryDto dl:categories)
 			{
-				ps.setInt(1,dl.getDrivingLicenceId());
+				ps.setInt(1,id.intValue());
 				ps.setInt(2, dl.getCategoryId());
 				ps.setDate(3, new java.sql.Date(dl.getValidFrom().getTime()));
 				ps.setBoolean(4, dl.getBanned());
@@ -60,12 +62,10 @@ public class DrivingLicenceCategoryDao {
 			int[] result=ps.executeBatch();
 			inserted=result.length==categories.size();
 			c.commit();
-		
 		} catch (SQLException e) {
 			try {
 				c.rollback();
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			e.printStackTrace();

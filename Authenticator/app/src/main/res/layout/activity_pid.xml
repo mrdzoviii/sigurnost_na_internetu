@@ -7,7 +7,7 @@
     tools:context=".PidActivity">
 
     <Button
-        android:id="@+id/btnDate"
+        android:id="@+id/btnPid"
         android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -27,7 +27,7 @@
         android:hint="@string/pid"
         android:inputType="numberDecimal"
         android:singleLine="true"
-        app:layout_constraintEnd_toStartOf="@+id/btnDate"
+        app:layout_constraintEnd_toStartOf="@+id/btnPid"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -41,5 +41,5 @@
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnDate" />
+        app:layout_constraintTop_toBottomOf="@+id/btnPid" />
 </android.support.constraint.ConstraintLayout>

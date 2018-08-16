@@ -39,11 +39,13 @@ public class PidTask extends AsyncTask<Void,Void,Void> {
     private String pid;
     private boolean flag=false;
 
+
     public PidTask(SessionBean bean,String pid,RecyclerView view, Activity context){
         this.bean=bean;
         this.pid=pid;
         this.context = context;
         this.recyclerView=view;
+
 
     }
 

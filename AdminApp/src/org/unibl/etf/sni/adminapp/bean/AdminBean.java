@@ -78,7 +78,7 @@ public class AdminBean implements Serializable {
 
 	private void clear() {
 		type = IDENTITY_CARD;
-		today = new Date();
+		today = ServiceUtility.getToday();
 		pid = "";
 		user = null;
 		pType = false;
@@ -105,6 +105,7 @@ public class AdminBean implements Serializable {
 
 	public void saveDocument() {
 		UserDto user = UserDao.getByPid(pid);
+		System.out.println(validFrom+"  "+validUntil+"  "+today);
 		if (pid.equals("") || !pid.matches(PID_REGEX) || validFrom == null || validUntil == null
 				|| validFrom.before(today) || validUntil.before(today) || user == null) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Input data not valid", "");

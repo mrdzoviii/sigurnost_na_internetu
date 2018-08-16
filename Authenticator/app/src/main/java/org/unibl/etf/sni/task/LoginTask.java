@@ -46,6 +46,8 @@ public class LoginTask extends AsyncTask<Void,Void,Void> {
                 userBean.setPassword(Hash.sha512Hash(mPassword.getText().toString()));
                 userBean.setToken(token.split("#")[0]);
                 userBean.setValidUntil(new Date(Long.valueOf(token.split("#")[1])));
+                userBean.setAdmin(Boolean.valueOf(token.split("#")[2]));
+                userBean.setPid(token.split("#")[3]);
                 mUsername.getText().clear();
                 wrong.setVisibility(View.INVISIBLE);
                 Intent intent = new Intent(activity, VerifyActivity.class);

@@ -4,7 +4,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.Security;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.ResourceBundle;
 import org.apache.commons.codec.binary.Hex;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -47,6 +49,19 @@ public class ServiceUtility {
 		if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
 			Security.addProvider(new BouncyCastleProvider());
 		}
+	}
+	public static Date getToday() {
+		
+
+		Date today = new Date();
+		Date todayWithZeroTime=today;
+		try {
+			todayWithZeroTime = sdf.parse(sdf.format(today));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		System.out.println(todayWithZeroTime);
+		return todayWithZeroTime;
 	}
 
 }

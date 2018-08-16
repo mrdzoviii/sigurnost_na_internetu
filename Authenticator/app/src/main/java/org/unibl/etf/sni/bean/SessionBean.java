@@ -8,15 +8,35 @@ public class SessionBean implements Serializable{
     private String password;
     private String token;
     private Date validUntil;
+    private Boolean admin;
+    private String pid;
 
-    public SessionBean(String username, String password, String token, Date validUntil) {
+    public SessionBean(String username, String password, String token, Date validUntil,Boolean admin,String pid) {
         this.username = username;
         this.password = password;
         this.token = token;
         this.validUntil = validUntil;
+        this.admin=admin;
+        this.pid=pid;
+    }
+
+    public String getPid() {
+        return pid;
+    }
+
+    public void setPid(String pid) {
+        this.pid = pid;
     }
 
     public SessionBean() {
+    }
+
+    public Boolean getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(Boolean admin) {
+        this.admin = admin;
     }
 
     public String getUsername() {
