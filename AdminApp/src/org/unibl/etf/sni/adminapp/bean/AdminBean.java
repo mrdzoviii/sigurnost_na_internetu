@@ -105,7 +105,7 @@ public class AdminBean implements Serializable {
 
 	public void saveDocument() {
 		UserDto user = UserDao.getByPid(pid);
-		System.out.println(validFrom+"  "+validUntil+"  "+today);
+		System.out.println(validFrom + "  " + validUntil + "  " + today);
 		if (pid.equals("") || !pid.matches(PID_REGEX) || validFrom == null || validUntil == null
 				|| validFrom.before(today) || validUntil.before(today) || user == null) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Input data not valid", "");
@@ -241,10 +241,12 @@ public class AdminBean implements Serializable {
 			FacesContext.getCurrentInstance().getExternalContext().redirect("https://desktop-k7km0nm:9443/cas/logout");
 			HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
 			UserDto user = (UserDto) session.getAttribute("user");
-			TokenDto token = TokenDao.getByUserId(user.getId());
-			token.setSso(false);
-			TokenDao.update(token);
-			session.removeAttribute("user");
+			if (user != null) {
+				TokenDto token = TokenDao.getByUserId(user.getId());
+				token.setSso(false);
+				TokenDao.update(token);
+				session.removeAttribute("user");
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

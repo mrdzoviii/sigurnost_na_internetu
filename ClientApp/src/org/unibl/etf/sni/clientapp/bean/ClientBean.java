@@ -112,10 +112,12 @@ public class ClientBean implements Serializable {
 			FacesContext.getCurrentInstance().getExternalContext().redirect("https://desktop-k7km0nm:9443/cas/logout");
 			HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
 			UserDto user = (UserDto) session.getAttribute("user");
-			TokenDto token = TokenDao.getByUserId(user.getId());
-			token.setSso(false);
-			TokenDao.update(token);
-			session.removeAttribute("user");
+			if (user != null) {
+				TokenDto token = TokenDao.getByUserId(user.getId());
+				token.setSso(false);
+				TokenDao.update(token);
+				session.removeAttribute("user");
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
