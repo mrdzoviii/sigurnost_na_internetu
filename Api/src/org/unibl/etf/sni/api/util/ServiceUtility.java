@@ -36,8 +36,9 @@ import org.unibl.etf.sni.api.mysql.dto.TokenDto;
 import org.unibl.etf.sni.api.mysql.dto.UserDto;
 
 public class ServiceUtility {
-	private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNPQRSTUVWXYZ0123456789";
-	public static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	public static final ResourceBundle bundle = ResourceBundle.getBundle("org.unibl.etf.sni.api.config.SniConfig");
+	private static final String ALPHA_NUMERIC_STRING = bundle.getString("alpha.numeric");
+	public static final SimpleDateFormat sdf = new SimpleDateFormat(bundle.getString("date.format"));
 
 	public static String generateAndroidToken(AndroidBean bean) {
 		if (bean.getUsername() != null && bean.getPassword() != null) {
@@ -83,7 +84,7 @@ public class ServiceUtility {
 		return "NOT_SENT";
 	}
 
-	public static final ResourceBundle bundle = ResourceBundle.getBundle("org.unibl.etf.sni.api.config.SniConfig");
+	
 	private static final int LENGTH = Integer.parseInt(bundle.getString("token.length"));
 
 	public static String sha512Hash(String plainText) throws NoSuchAlgorithmException, NoSuchProviderException {
@@ -151,9 +152,7 @@ public class ServiceUtility {
 
 	}
 
-	public static void main(String[] args) {
-		sendMail("joco-95@hotmail.com", tokenGenerator());
-	}
+
 
 	public static DocumentsBean getDocumentsByDate(Date issueDate) {
 		List<IdentityCardDto> identityCards = IdentityCardDao.getByDate(issueDate);

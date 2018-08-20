@@ -60,7 +60,7 @@ public class ClientBean implements Serializable {
 	}
 
 	public void filterDocs() {
-		if (!pid.matches("^[0-9]{0,13}$") || !username.matches("^[0-9a-zA-z]+$")
+		if (!pid.matches("^[0-9]{0,13}$") || !username.matches("^[0-9a-zA-z]*$")
 				|| !serial.matches("^[0-9a-zA-z]{0,9}$") || !serial.matches("^[0-9a-zA-z]{0,30}$")) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Wrong input data...", "");
 			FacesContext.getCurrentInstance().addMessage(null, message);
@@ -90,7 +90,7 @@ public class ClientBean implements Serializable {
 				FacesContext.getCurrentInstance().addMessage(null, message);
 				return;
 			}
-			System.out.println(token.getToken());
+			
 			if (token.getToken().equals(code)) {
 				token.setSso(true);
 				TokenDao.update(token);
@@ -108,16 +108,16 @@ public class ClientBean implements Serializable {
 
 	public void logout() {
 		try {
-			FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-			FacesContext.getCurrentInstance().getExternalContext().redirect("https://desktop-k7km0nm:9443/cas/logout");
-			HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-			UserDto user = (UserDto) session.getAttribute("user");
+			HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+			UserDto user = getUser();
 			if (user != null) {
 				TokenDto token = TokenDao.getByUserId(user.getId());
 				token.setSso(false);
 				TokenDao.update(token);
 				session.removeAttribute("user");
 			}
+			FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+			FacesContext.getCurrentInstance().getExternalContext().redirect("https://desktop-k7km0nm:9443/cas/logout");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

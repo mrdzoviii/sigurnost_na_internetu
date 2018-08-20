@@ -113,7 +113,7 @@ private static final String SQL_SELECT_ALL="SELECT * FROM driving_licence";
 			Object pom[] = { uid };
 			ps = ConnectionPool.prepareStatement(c,SQL_SELECT_BY_UID,false, pom);
 			rs = ps.executeQuery();
-			if (rs.next()) {
+			while (rs.next()) {
 				DrivingLicenceDto idc=new DrivingLicenceDto();
 				idc.setId(rs.getInt("id"));
 				idc.setSerial(rs.getString("serial"));

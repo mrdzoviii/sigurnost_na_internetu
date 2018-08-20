@@ -32,7 +32,6 @@ public class AccessListener implements PhaseListener {
 		String address = "error.xhtml?faces-redirect=true";
 		String username = req.getRemoteUser();
 		UserDto user = UserDao.getByUsername(username);
-		System.out.println(req.getRequestURI());
 		if (req.getRequestURI().contains("jsessionid") || req.getRequestURI().endsWith("/")) {
 			if (user != null) {
 				session.setAttribute("user", user);

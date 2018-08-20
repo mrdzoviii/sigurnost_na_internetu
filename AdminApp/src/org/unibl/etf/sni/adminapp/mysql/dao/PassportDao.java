@@ -77,7 +77,7 @@ public class PassportDao {
 			Object pom[] = { pid };
 			ps = ConnectionPool.prepareStatement(c,SQL_SELECT_BY_UID,false, pom);
 			rs = ps.executeQuery();
-			if (rs.next()) {
+			while (rs.next()) {
 				PassportDto idc=new PassportDto();
 				idc.setId(rs.getInt("id"));
 				idc.setSerial(rs.getString("serial"));

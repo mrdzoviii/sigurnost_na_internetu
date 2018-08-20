@@ -37,7 +37,7 @@ public class AdminBean implements Serializable {
 	private static final String PID_REGEX = ServiceUtility.bundle.getString("pidRegex");
 
 	private String pid;
-	private UserDto user;
+	
 	private PassportDto passport;
 	private IdentityCardDto identityCard;
 	private DrivingLicenceDto drivingLicence;
@@ -80,7 +80,6 @@ public class AdminBean implements Serializable {
 		type = IDENTITY_CARD;
 		today = ServiceUtility.getToday();
 		pid = "";
-		user = null;
 		pType = false;
 		idType = true;
 		dlType = false;
@@ -221,7 +220,7 @@ public class AdminBean implements Serializable {
 				FacesContext.getCurrentInstance().addMessage(null, message);
 				return;
 			}
-			System.out.println(token.getToken());
+			
 			if (token.getToken().equals(code)) {
 				token.setSso(true);
 				TokenDao.update(token);
@@ -237,16 +236,16 @@ public class AdminBean implements Serializable {
 
 	public void logout() {
 		try {
-			FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-			FacesContext.getCurrentInstance().getExternalContext().redirect("https://desktop-k7km0nm:9443/cas/logout");
-			HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-			UserDto user = (UserDto) session.getAttribute("user");
+			HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+			UserDto user = getUser();
 			if (user != null) {
 				TokenDto token = TokenDao.getByUserId(user.getId());
 				token.setSso(false);
 				TokenDao.update(token);
 				session.removeAttribute("user");
 			}
+			FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+			FacesContext.getCurrentInstance().getExternalContext().redirect("https://desktop-k7km0nm:9443/cas/logout");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -309,11 +308,9 @@ public class AdminBean implements Serializable {
 	}
 
 	public UserDto getUser() {
+		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+		UserDto user = (UserDto) session.getAttribute("user");
 		return user;
-	}
-
-	public void setUser(UserDto user) {
-		this.user = user;
 	}
 
 	public PassportDto getPassport() {

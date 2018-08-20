@@ -32,7 +32,6 @@ public class AccessListener implements PhaseListener {
 		//String loginURL = "https://desktop-k7km0nm:9443/cas/login";
 		String username = req.getRemoteUser();
 		UserDto user = UserDao.getByUsername(username);
-		System.out.println(req.getRequestURI());
 		if (req.getRequestURI().contains("jsessionid") || req.getRequestURI().endsWith("/")) {
 			if (user != null) {
 				TokenDto token=TokenDao.getByUserId(user.getId());

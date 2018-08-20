@@ -77,7 +77,7 @@ public class IdentityCardDao {
 			Object pom[] = { uid};
 			ps = ConnectionPool.prepareStatement(c,SQL_SELECT_BY_PID,false, pom);
 			rs = ps.executeQuery();
-			if (rs.next()) {
+			while (rs.next()) {
 				IdentityCardDto idc=new IdentityCardDto();
 				idc.setId(rs.getInt("id"));
 				idc.setSerial(rs.getString("serial"));
