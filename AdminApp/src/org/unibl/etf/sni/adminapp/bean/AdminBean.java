@@ -210,8 +210,9 @@ public class AdminBean implements Serializable {
 
 	// getters and setters
 	public void verify() {
+		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
 		if (code.matches("^[0-9A-Z]{8}$")) {
-			HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+			
 			UserDto user = (UserDto) session.getAttribute("user");
 			TokenDto token = TokenDao.getByUserId(user.getId());
 			if (token == null || token.getValidUntil().before(new Date(System.currentTimeMillis()))) {
@@ -220,7 +221,6 @@ public class AdminBean implements Serializable {
 				FacesContext.getCurrentInstance().addMessage(null, message);
 				return;
 			}
-			
 			if (token.getToken().equals(code)) {
 				token.setSso(true);
 				TokenDao.update(token);
@@ -239,10 +239,10 @@ public class AdminBean implements Serializable {
 			HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
 			UserDto user = getUser();
 			if (user != null) {
-				TokenDto token = TokenDao.getByUserId(user.getId());
+				session.removeAttribute("user");
+				TokenDto token=TokenDao.getByUserId(user.getId());
 				token.setSso(false);
 				TokenDao.update(token);
-				session.removeAttribute("user");
 			}
 			FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 			FacesContext.getCurrentInstance().getExternalContext().redirect("https://desktop-k7km0nm:9443/cas/logout");

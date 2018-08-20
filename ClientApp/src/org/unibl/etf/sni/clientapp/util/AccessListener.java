@@ -1,6 +1,5 @@
 package org.unibl.etf.sni.clientapp.util;
 
-import java.util.Date;
 
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseEvent;
@@ -32,27 +31,46 @@ public class AccessListener implements PhaseListener {
 		String address = "error.xhtml?faces-redirect=true";
 		String username = req.getRemoteUser();
 		UserDto user = UserDao.getByUsername(username);
-		if (req.getRequestURI().contains("jsessionid") || req.getRequestURI().endsWith("/")) {
+		System.out.println("CLIENT:"+req.getRequestURI());
+		String referrer = cxt.getExternalContext().getRequestHeaderMap().get("referer"); 
+		System.out.println("CLIENT ref:"+referrer);
+		if (req.getRequestURI().contains(";jsessionid=")) {
 			if (user != null) {
 				session.setAttribute("user", user);
-				TokenDto token = TokenDao.getByUserId(user.getId());
-				if (token != null) {
-					if (token.getSso() && token.getValidUntil().after(new Date(System.currentTimeMillis()))) {
+				TokenDto token=TokenDao.getByUserId(user.getId());
+				if (referrer != null && referrer.contains("cas/login")) {
+					address = "verify.xhtml?faces-redirect=true";
+					token.setSso(false);
+					TokenDao.update(token);
+				} else {
+					if (token.getSso()) {
 						address = "index.xhtml?faces-redirect=true";
 					} else {
 						address = "verify.xhtml?faces-redirect=true";
 					}
-				}else {
-					address = "verify.xhtml?faces-redirect=true";
+				}
+				if (!resp.isCommitted()) {
+					cxt.getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null,
+							address);
+					cxt.responseComplete();
 				}
 			}
-
+		} else if (req.getRequestURI().endsWith("/")) {
+			if (user != null) {
+				session.setAttribute("user", user);
+				TokenDto token=TokenDao.getByUserId(user.getId());
+					if(token.getSso())
+					address = "index.xhtml?faces-redirect=true";
+					else
+						address = "verify.xhtml?faces-redirect=true";
+			}
 			if (!resp.isCommitted()) {
 				cxt.getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null,
 						address);
 				cxt.responseComplete();
 			}
 		}
+		
 	}
 
 	@Override

@@ -90,7 +90,6 @@ public class ClientBean implements Serializable {
 				FacesContext.getCurrentInstance().addMessage(null, message);
 				return;
 			}
-			
 			if (token.getToken().equals(code)) {
 				token.setSso(true);
 				TokenDao.update(token);
@@ -111,10 +110,10 @@ public class ClientBean implements Serializable {
 			HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
 			UserDto user = getUser();
 			if (user != null) {
-				TokenDto token = TokenDao.getByUserId(user.getId());
+				session.removeAttribute("user");
+				TokenDto token=TokenDao.getByUserId(user.getId());
 				token.setSso(false);
 				TokenDao.update(token);
-				session.removeAttribute("user");
 			}
 			FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 			FacesContext.getCurrentInstance().getExternalContext().redirect("https://desktop-k7km0nm:9443/cas/logout");

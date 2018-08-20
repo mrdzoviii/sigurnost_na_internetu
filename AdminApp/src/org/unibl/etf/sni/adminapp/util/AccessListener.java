@@ -1,5 +1,4 @@
 package org.unibl.etf.sni.adminapp.util;
-import java.util.Date;
 
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseEvent;
@@ -29,35 +28,57 @@ public class AccessListener implements PhaseListener {
 		HttpServletResponse resp = (HttpServletResponse) cxt.getExternalContext().getResponse();
 		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
 		String address = "403.xhtml?faces-redirect=true";
-		//String loginURL = "https://desktop-k7km0nm:9443/cas/login";
+		// String loginURL = "https://desktop-k7km0nm:9443/cas/login";
 		String username = req.getRemoteUser();
 		UserDto user = UserDao.getByUsername(username);
-		if (req.getRequestURI().contains("jsessionid") || req.getRequestURI().endsWith("/")) {
+		System.out.println("ADMIN:" + req.getRequestURI());
+		String referrer = cxt.getExternalContext().getRequestHeaderMap().get("referer");
+		System.out.println("ADMIN ref:" + referrer);
+		if (req.getRequestURI().contains(";jsessionid=")) {
 			if (user != null) {
-				TokenDto token=TokenDao.getByUserId(user.getId());
-				session.setAttribute("user",user);
+				session.setAttribute("user", user);
+				TokenDto token = TokenDao.getByUserId(user.getId());
 				if (user.getAdmin()) {
-					if (token != null) {
-						if (token.getSso() && token.getValidUntil().after(new Date(System.currentTimeMillis()))) {
+					if (referrer != null && referrer.contains("cas/login")) {
+						address = "verify.xhtml?faces-redirect=true";
+						token.setSso(false);
+						TokenDao.update(token);
+					} else {
+						if (token.getSso()) {
 							address = "index.xhtml?faces-redirect=true";
 						} else {
 							address = "verify.xhtml?faces-redirect=true";
 						}
-					}else {
-						address = "verify.xhtml?faces-redirect=true";
 					}
-
+				} else {
+					address = "403.xhtml?faces-redirect=true";
+				}
+				if (!resp.isCommitted()) {
+					cxt.getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(),
+							null, address);
+					cxt.responseComplete();
+				}
+			}
+		} else if (req.getRequestURI().endsWith("/")) {
+			if (user != null) {
+				session.setAttribute("user", user);
+				TokenDto token = TokenDao.getByUserId(user.getId());
+				if (user.getAdmin()) {
+					if (token.getSso())
+						address = "index.xhtml?faces-redirect=true";
+					else
+						address = "verify.xhtml?faces-redirect=true";
 				} else {
 					address = "403.xhtml?faces-redirect=true";
 				}
 			}
-		
 			if (!resp.isCommitted()) {
-				cxt.getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(),
-						null, address);
+				cxt.getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null,
+						address);
 				cxt.responseComplete();
 			}
 		}
+
 	}
 
 	@Override
