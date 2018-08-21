@@ -76,6 +76,10 @@ public class AdminBean implements Serializable {
 		dlType = DRIVING_LICENNCE.equals(type);
 	}
 
+	public List<String> completePid(String query) {
+		return UserDao.getAllPids(query);
+	}
+	
 	private void clear() {
 		type = IDENTITY_CARD;
 		today = ServiceUtility.getToday();
@@ -104,7 +108,6 @@ public class AdminBean implements Serializable {
 
 	public void saveDocument() {
 		UserDto user = UserDao.getByPid(pid);
-		System.out.println(validFrom + "  " + validUntil + "  " + today);
 		if (pid.equals("") || !pid.matches(PID_REGEX) || validFrom == null || validUntil == null
 				|| validFrom.before(today) || validUntil.before(today) || user == null) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Input data not valid", "");
@@ -118,7 +121,7 @@ public class AdminBean implements Serializable {
 			identityCard.setUserId(user.getId());
 			identityCard.setValidFrom(validFrom);
 			identityCard.setValidUntil(validUntil);
-			if (IdentityCardDao.insert(identityCard)) {
+			if (IdentityCardDao.update(user.getId()) && IdentityCardDao.insert(identityCard)) {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Document created", "");
 				FacesContext.getCurrentInstance().addMessage(null, message);
 				clear();
@@ -133,7 +136,7 @@ public class AdminBean implements Serializable {
 			passport.setUserId(user.getId());
 			passport.setValidFrom(validFrom);
 			passport.setValidUntil(validUntil);
-			if (PassportDao.insert(passport)) {
+			if (PassportDao.update(user.getId()) && PassportDao.insert(passport)) {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Document created", "");
 				FacesContext.getCurrentInstance().addMessage(null, message);
 				clear();
@@ -193,10 +196,10 @@ public class AdminBean implements Serializable {
 				categories
 						.add(new DrivingLicenceCategoryDto(null, CategoryDao.getByName("DE").getId(), de, false, null));
 			}
-			System.out.println(categories.size());
+			
 			drivingLicence.setCategories(categories);
 
-			if (DrivingLicenceDao.insert(drivingLicence)) {
+			if (DrivingLicenceDao.update(user.getId()) && DrivingLicenceDao.insert(drivingLicence)) {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Document created", "");
 				FacesContext.getCurrentInstance().addMessage(null, message);
 				clear();

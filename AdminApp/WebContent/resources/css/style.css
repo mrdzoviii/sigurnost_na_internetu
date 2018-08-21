@@ -227,6 +227,12 @@ body {
 .fifty-percent{
 	width: 50%;
 }
+.forty-percent{
+	width: 40%;
+}
+.thirty-percent{
+	width: 30%;
+}
 .small-map{
 	width:300px;
 	height:150px;

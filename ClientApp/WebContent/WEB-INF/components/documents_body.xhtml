@@ -10,6 +10,7 @@
 	<h:outputStylesheet name="style.css"></h:outputStylesheet>
 	<div class="dashboard">
 		<h:form prependId="false" id="form">
+			<p:remoteCommand id="filter" actionListener="#{clientBean.filterDocs}"></p:remoteCommand>
 			<p:growl id="error" sticky="true" showDetail="true">
 				<p:autoUpdate></p:autoUpdate>
 			</p:growl>
@@ -23,9 +24,12 @@
 						<p:autoComplete id="personId" placeholder="Person id"
 							styleClass="input-filter" value="#{clientBean.pid}" rendered="#{sessionScope.user.admin}"
 							completeMethod="#{clientBean.completePid}" queryDelay="100"
-							queryEvent="keyup" minQueryLength="3">
+							queryEvent="keyup" minQueryLength="3"  >
 							<p:ajax update="docs" process="personId,username,issueDate"
-								listener="#{clientBean.filterDocs}" event="keyup" />
+								listener="#{clientBean.filterDocs}" event="keyup"/>
+								<p:ajax update="docs" process="personId,username,issueDate"
+								listener="#{clientBean.filterDocs}" event="itemSelect"/>
+								
 						</p:autoComplete>
 
 						<p:outputLabel value="Username:" rendered="#{sessionScope.user.admin}" ></p:outputLabel>
@@ -35,6 +39,8 @@
 							queryEvent="keyup" minQueryLength="3">
 							<p:ajax update="docs" process="personId,username,issueDate"
 								listener="#{clientBean.filterDocs}" event="keyup" />
+								<p:ajax update="docs" process="personId,username,issueDate"
+								listener="#{clientBean.filterDocs}" event="itemSelect" />
 						</p:autoComplete>
 
 						<p:outputLabel for="@next" value="Date of issue:"></p:outputLabel>
@@ -52,6 +58,8 @@
 							queryEvent="keyup" minQueryLength="3">
 							<p:ajax update="docs" process="personId,username,issueDate,serial"
 								listener="#{clientBean.filterDocs}" event="keyup" />
+								<p:ajax update="docs" process="personId,username,issueDate,serial"
+								listener="#{clientBean.filterDocs}" event="itemSelect" />
 						</p:autoComplete>
 						
 						<p:outputLabel></p:outputLabel>

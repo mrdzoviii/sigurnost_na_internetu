@@ -15,8 +15,27 @@ public class IdentityCardDao {
 	private static final String SQL_SELECT_BY_DATE="SELECT * FROM identity_card WHERE valid_from=? and status=1";
 	private static final String SQL_SELECT_BY_PID="SELECT i.* FROM identity_card i INNER JOIN user u ON i.user_id=u.id WHERE u.pid=? and status=1";
 	private static final String SQL_INSERT="INSERT INTO identity_card VALUES (?,?,?,?,?,?)";
+	private static final String SQL_UPDATE="UPDATE identity_card SET status=0 WHERE status=1  and user_id=?";
 	
 	
+	public static boolean update(Integer userId) {
+		PreparedStatement ps = null;
+		Connection c = null;
+		try {
+			c = ConnectionPool.getInstance().checkOut();
+			Object pom[] = {userId};
+			ps = ConnectionPool.prepareStatement(c, SQL_UPDATE, false, pom);
+			ps.executeUpdate();
+			ps.close();
+		} catch (Exception exp) {
+			exp.printStackTrace();
+		} finally {
+			ConnectionPool.close(ps);
+			ConnectionPool.getInstance().checkIn(c);
+		}
+		return true;
+	}
+
 	
 	public static boolean insert(IdentityCardDto idc) {
 		PreparedStatement ps = null;

@@ -14,6 +14,7 @@ public class UserDao {
 	private static final String SQL_SELECT_BY_USERNAME="SELECT * FROM user WHERE username=?";
 	private static final String SQL_SELECT_BY_ID="SELECT * FROM user WHERE id=?";
 	private static final String SQL_SELECT_BY_PID="SELECT * FROM user WHERE pid=?";
+	private static final String SQL_SELECT_PERSON_ID="SELECT pid from user where pid like ?";
 	public static List<UserDto> getAll() {
 		PreparedStatement ps = null;
 		Connection c = null;
@@ -38,6 +39,35 @@ public class UserDao {
 				user.setSurname(rs.getString("surname"));
 				user.setAdmin(rs.getBoolean("admin"));
 				result.add(user);
+			}
+			ps.close();
+		} catch (Exception exp) {
+			exp.printStackTrace();
+		} finally {
+			ConnectionPool.close(ps);
+			ConnectionPool.getInstance().checkIn(c);
+		}
+		return result;
+	}
+	
+	public static List<String> getAllPids(String query) {
+		PreparedStatement ps = null;
+		Connection c = null;
+		String tmp="%";
+		if(query.matches("^[0-9]+$")) {
+			tmp=query+"%";
+		}else {
+			return null;
+		}
+		List<String> result = new ArrayList<>();
+		ResultSet rs = null;
+		try {
+			c = ConnectionPool.getInstance().checkOut();
+			Object pom[] = { tmp};
+			ps = ConnectionPool.prepareStatement(c,SQL_SELECT_PERSON_ID,false, pom);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				result.add(rs.getString("pid"));
 			}
 			ps.close();
 		} catch (Exception exp) {

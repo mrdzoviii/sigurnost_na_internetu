@@ -60,6 +60,7 @@ public class ClientBean implements Serializable {
 	}
 
 	public void filterDocs() {
+		System.out.println(pid);
 		if (!pid.matches("^[0-9]{0,13}$") || !username.matches("^[0-9a-zA-z]*$")
 				|| !serial.matches("^[0-9a-zA-z]{0,9}$") || !serial.matches("^[0-9a-zA-z]{0,30}$")) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Wrong input data...", "");

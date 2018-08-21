@@ -15,18 +15,18 @@
 		</p:growl>
 		<div id="document_personal_data">
 			<p:panel header="Person data:">
-				<p:panelGrid columns="3" styleClass="form ui-noborder">
-
+				<p:panelGrid columns="3" styleClass="form ui-noborder" columnClasses="thirty-percent,forty-percent,forty-percent">
 					<p:outputLabel for="personId" value="Person ID:"></p:outputLabel>
-					<p:inputText id="personId" value="#{adminBean.pid}" required="true"
+					<p:autoComplete id="personId" value="#{adminBean.pid}" required="true" completeMethod="#{adminBean.completePid}" queryDelay="100"
+							queryEvent="keyup" minQueryLength="3"
 						requiredMessage="Enter person id">
 						<f:validator
 							validatorId="org.unibl.etf.sni.adminapp.validator.PersonIdValidator"></f:validator>
 						<f:ajax event="blur" render="pid_msg"></f:ajax>
-					</p:inputText>
+					</p:autoComplete>
 					<p:message id="pid_msg" for="personId" display="text"></p:message>
 
-					<p:outputLabel for="type" value="Documetn type:"></p:outputLabel>
+					<p:outputLabel for="type" value="Document type:"></p:outputLabel>
 					<p:selectOneButton value="#{adminBean.type}" id="type"
 						required="true" onchange="toogleForm()"
 						requiredMessage="Document type must be selected.">
