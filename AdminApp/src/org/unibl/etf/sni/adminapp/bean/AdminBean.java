@@ -152,47 +152,47 @@ public class AdminBean implements Serializable {
 			drivingLicence.setValidFrom(validFrom);
 			drivingLicence.setValidUntil(validUntil);
 			List<DrivingLicenceCategoryDto> categories = new ArrayList<>();
-			if (a != null) {
+			if (a != null && a.compareTo(today)<=0) {
 				categories.add(new DrivingLicenceCategoryDto(null, CategoryDao.getByName("A").getId(), a, false, null));
 			}
-			if (a1 != null) {
+			if (a1 != null && a1.compareTo(today)<=0) {
 				categories
 						.add(new DrivingLicenceCategoryDto(null, CategoryDao.getByName("A1").getId(), a1, false, null));
 			}
-			if (b != null) {
+			if (b != null && b.compareTo(today)<=0) {
 				categories.add(new DrivingLicenceCategoryDto(null, CategoryDao.getByName("B").getId(), b, false, null));
 			}
-			if (b1 != null) {
+			if (b1 != null && b1.compareTo(today)<=0) {
 				categories
 						.add(new DrivingLicenceCategoryDto(null, CategoryDao.getByName("B1").getId(), b1, false, null));
 			}
-			if (c != null) {
+			if (c != null && c.compareTo(today)<=0) {
 				categories.add(new DrivingLicenceCategoryDto(null, CategoryDao.getByName("C").getId(), c, false, null));
 			}
-			if (c1 != null) {
+			if (c1 != null && c1.compareTo(today)<=0) {
 				categories
 						.add(new DrivingLicenceCategoryDto(null, CategoryDao.getByName("C1").getId(), c1, false, null));
 			}
-			if (d != null) {
+			if (d != null && d.compareTo(today)<=0) {
 				categories.add(new DrivingLicenceCategoryDto(null, CategoryDao.getByName("D").getId(), d, false, null));
 			}
-			if (d1 != null) {
+			if (d1 != null && d1.compareTo(today)<=0) {
 				categories
 						.add(new DrivingLicenceCategoryDto(null, CategoryDao.getByName("D1").getId(), d1, false, null));
 			}
-			if (be != null) {
+			if (be != null && be.compareTo(today)<=0) {
 				categories
 						.add(new DrivingLicenceCategoryDto(null, CategoryDao.getByName("BE").getId(), be, false, null));
 			}
-			if (ce != null) {
+			if (ce != null && ce.compareTo(today)<=0) {
 				categories
 						.add(new DrivingLicenceCategoryDto(null, CategoryDao.getByName("CE").getId(), ce, false, null));
 			}
-			if (c1e != null) {
+			if (c1e != null && c1e.compareTo(today)<=0) {
 				categories.add(
 						new DrivingLicenceCategoryDto(null, CategoryDao.getByName("C1E").getId(), c1e, false, null));
 			}
-			if (de != null) {
+			if (de != null && de.compareTo(today)<=0) {
 				categories
 						.add(new DrivingLicenceCategoryDto(null, CategoryDao.getByName("DE").getId(), de, false, null));
 			}
