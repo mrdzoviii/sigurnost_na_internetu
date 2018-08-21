@@ -12,8 +12,8 @@ import org.unibl.etf.sni.adminapp.mysql.dto.IdentityCardDto;
 import org.unibl.etf.sni.adminapp.util.ConnectionPool;
 
 public class IdentityCardDao {
-	private static final String SQL_SELECT_BY_DATE="SELECT * FROM identity_card WHERE valid_from=?";
-	private static final String SQL_SELECT_BY_PID="SELECT i.* FROM identity_card i INNER JOIN user u ON i.user_id=u.id WHERE u.pid=?";
+	private static final String SQL_SELECT_BY_DATE="SELECT * FROM identity_card WHERE valid_from=? and status=1";
+	private static final String SQL_SELECT_BY_PID="SELECT i.* FROM identity_card i INNER JOIN user u ON i.user_id=u.id WHERE u.pid=? and status=1";
 	private static final String SQL_INSERT="INSERT INTO identity_card VALUES (?,?,?,?,?,?)";
 	
 	

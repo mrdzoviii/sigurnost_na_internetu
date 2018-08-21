@@ -12,8 +12,8 @@ import org.unibl.etf.sni.adminapp.mysql.dto.PassportDto;
 import org.unibl.etf.sni.adminapp.util.ConnectionPool;
 
 public class PassportDao {
-	private static final String SQL_SELECT_BY_DATE="SELECT * FROM passport WHERE valid_from=?";
-	private static final String SQL_SELECT_BY_UID="SELECT p.* FROM passport p INNER JOIN user u ON p.user_id=u.id WHERE u.pid=?";
+	private static final String SQL_SELECT_BY_DATE="SELECT * FROM passport WHERE valid_from=? and status=1";
+	private static final String SQL_SELECT_BY_UID="SELECT p.* FROM passport p INNER JOIN user u ON p.user_id=u.id WHERE u.pid=? and status=1";
 	private static final String SQL_INSERT="INSERT INTO passport VALUES (?,?,?,?,?,?)";
 	
 	

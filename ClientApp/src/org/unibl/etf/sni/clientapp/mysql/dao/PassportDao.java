@@ -12,10 +12,10 @@ import org.unibl.etf.sni.clientapp.mysql.dto.PassportDto;
 import org.unibl.etf.sni.clientapp.util.ConnectionPool;
 
 public class PassportDao {
-	private static final String SQL_SELECT_BY_DATE="SELECT * FROM passport WHERE valid_from=?";
-	private static final String SQL_SELECT_BY_UID="SELECT p.* FROM passport p INNER JOIN user u ON p.user_id=u.id WHERE u.pid=?";
+	private static final String SQL_SELECT_BY_DATE="SELECT * FROM passport WHERE valid_from=? and status=1";
+	private static final String SQL_SELECT_BY_UID="SELECT p.* FROM passport p INNER JOIN user u ON p.user_id=u.id WHERE u.pid=? and status=1";
 	private static final String SQL_INSERT="INSERT INTO passport VALUES (?,?,?,?,?,?)";
-	private static final String SQL_SELECT_ALL="SELECT * FROM passport";
+	private static final String SQL_SELECT_ALL="SELECT * FROM passport where status=1";
 	private static final String SQL_SELECT_SERIAL="SELECT distinct serial from (Select serial from identity_card union select serial from driving_licence union select serial from passport) as p where serial like ?";
 	public static List<String> getAllSerials(String query) {
 		PreparedStatement ps = null;

@@ -12,8 +12,8 @@ import org.unibl.etf.sni.adminapp.mysql.dto.DrivingLicenceDto;
 import org.unibl.etf.sni.adminapp.util.ConnectionPool;
 
 public class DrivingLicenceDao {
-	private static final String SQL_SELECT_BY_DATE="SELECT * FROM driving_licence WHERE valid_from=?";
-	private static final String SQL_SELECT_BY_UID="SELECT i.* FROM driving_licence i INNER JOIN user u ON i.user_id=u.id WHERE u.pid=?";
+	private static final String SQL_SELECT_BY_DATE="SELECT * FROM driving_licence WHERE valid_from=? and status=1";
+	private static final String SQL_SELECT_BY_UID="SELECT i.* FROM driving_licence i INNER JOIN user u ON i.user_id=u.id WHERE u.pid=? and status=1";
 	private static final String SQL_INSERT="INSERT INTO driving_licence VALUES (?,?,?,?,?,?)";
 	
 	
