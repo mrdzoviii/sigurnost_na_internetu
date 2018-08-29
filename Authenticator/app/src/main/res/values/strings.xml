@@ -10,9 +10,9 @@
     <string name="ok">YES</string>
     <string name="no">NO</string>
     <string name="wrong_credentials">Wrong credentials</string>
-
+    <string name="client_cert_pass">lozzinka</string>
     <string name="serviceProtocol">https://</string>
-    <string name="host">192.168.1.11</string>
+    <string name="host">10.0.2.2</string>
     <string name="port">8443</string>
     <string name="restServicePath">/Api/rest/</string>
     <string name="soapServicePath">Api/services/Soap</string>

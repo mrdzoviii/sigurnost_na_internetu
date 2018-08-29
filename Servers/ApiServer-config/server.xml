@@ -109,7 +109,7 @@
     
     
 
-	 <Connector SSLEnabled="true" clientAuth="false" keystoreFile="conf/keystore.jks" keystorePass="lozzinka" keystoreType="JKS" maxThreads="200" port="8443" protocol="org.apache.coyote.http11.Http11NioProtocol" scheme="https" secure="true" sslProtocol="TLS" truststoreFile="conf/truststore.jks" truststorePass="lozzinka" truststoreType="JKS"/>
+	 <Connector SSLEnabled="true" clientAuth="true" keystoreFile="conf/keystore.jks" keystorePass="lozzinka" keystoreType="JKS" maxThreads="200" port="8443" protocol="org.apache.coyote.http11.Http11NioProtocol" scheme="https" secure="true" sslProtocol="TLS" truststoreFile="conf/truststore.jks" truststorePass="lozzinka" truststoreType="JKS"/>
 	 
 
     <!-- An Engine represents the entry point (within Catalina) that processes

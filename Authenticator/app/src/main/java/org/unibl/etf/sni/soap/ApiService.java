@@ -102,7 +102,7 @@ public class ApiService {
         soapReq.addProperty("time",time);
         soapEnvelope.setOutputSoapObject(soapReq);
         HttpsTransportSE httpsTransportSE = new HttpsTransportSE(host,port,file,timeOut);
-        HttpsURLConnection.setDefaultSSLSocketFactory(MyCAVerification.sslSocketFactory);
+        HttpsURLConnection.setDefaultSSLSocketFactory(MyCAVerification.getSslSocketFactory(context));
         HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
             @Override
             public boolean verify(String s, SSLSession sslSession) {
