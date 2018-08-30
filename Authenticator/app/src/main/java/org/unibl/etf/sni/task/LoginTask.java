@@ -4,16 +4,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.obsez.android.lib.filechooser.ChooserDialog;
+
+import org.unibl.etf.sni.authenticator.R;
 import org.unibl.etf.sni.authenticator.VerifyActivity;
 import org.unibl.etf.sni.bean.SessionBean;
 import org.unibl.etf.sni.rest.Api;
 import org.unibl.etf.sni.rest.RetrofitClientInstance;
 import org.unibl.etf.sni.rest.beans.AndroidBean;
 import org.unibl.etf.sni.util.Hash;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import okhttp3.ResponseBody;
@@ -23,28 +30,36 @@ public class LoginTask extends AsyncTask<Void,Void,Void> {
     private  EditText mUsername;
     private  EditText mPassword;
     private EditText mKeyStorePass;
+    private EditText mCertPath;
     private  Activity activity;
     private  TextView wrong;
     private String token;
 
-    public LoginTask(EditText mUsername, EditText mPassword,EditText mKeyStorePass,TextView wrong,Activity ctx) {
+    public LoginTask(EditText mUsername, EditText mPassword,EditText mKeyStorePass,EditText mCertPath,TextView wrong,Activity ctx) {
         this.mUsername = mUsername;
         this.mPassword = mPassword;
         this.mKeyStorePass=mKeyStorePass;
         this.wrong=wrong;
         this.activity = ctx;
+        this.mCertPath=mCertPath;
     }
 
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        SharedPreferences preferences=activity.getSharedPreferences("KeyStore",Context.MODE_PRIVATE);
+        final SharedPreferences preferences=activity.getSharedPreferences("KeyStore",Context.MODE_PRIVATE);
         String password=preferences.getString("keyStorePass","");
+        String certPath=preferences.getString("certPath","");
         if(password.isEmpty()){
             preferences.edit().putString("keyStorePass",mKeyStorePass.getText().toString()).apply();
             mKeyStorePass.setVisibility(View.GONE);
         }
+        if(certPath.isEmpty()){
+            preferences.edit().putString("certPath",mCertPath.getText().toString()).apply();
+            mCertPath.setVisibility(View.GONE);
+        }
+
     }
 
     @Override
@@ -53,6 +68,7 @@ public class LoginTask extends AsyncTask<Void,Void,Void> {
         wrong.setVisibility(View.INVISIBLE);
         if(token!=null) {
             if ("NOT_SENT".equals(token)) {
+                wrong.setText(activity.getString(R.string.wrong_credentials));
                 wrong.setVisibility(View.VISIBLE);
                 return;
             } else {
@@ -73,9 +89,14 @@ public class LoginTask extends AsyncTask<Void,Void,Void> {
         }else{
             SharedPreferences preferences=activity.getSharedPreferences("KeyStore",Context.MODE_PRIVATE);
             String password=preferences.getString("keyStorePass","");
+            String certPath=preferences.getString("certPath","");
             if(!password.isEmpty()){
                 preferences.edit().putString("keyStorePass","").apply();
                 mKeyStorePass.setVisibility(View.VISIBLE);
+            }
+            if(!certPath.isEmpty()){
+                preferences.edit().putString("certPath","").apply();
+                mCertPath.setVisibility(View.VISIBLE);
             }
             Toast.makeText(activity,"Something went wrong",Toast.LENGTH_LONG).show();
         }

@@ -50,8 +50,7 @@ public class MyCAVerification {
         KeyManager[] keyManagers=null;
         try {
             KeyStore keyStore=KeyStore.getInstance("PKCS12");
-            File sdCard=new File(Environment.getExternalStorageDirectory().getAbsolutePath());
-            File file= new File(sdCard,"/Keystore/CLIENT.p12");
+            File file= new File(context.getSharedPreferences("KeyStore",Context.MODE_PRIVATE).getString("certPath",""));
             if(file.exists()) {
                 FileInputStream fis=new FileInputStream(file);
                 char[] clientCertPassword = context.getSharedPreferences("KeyStore",Context.MODE_PRIVATE).getString("keyStorePass","changeit").toCharArray();

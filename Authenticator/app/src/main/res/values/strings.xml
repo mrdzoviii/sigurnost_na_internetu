@@ -10,7 +10,9 @@
     <string name="ok">YES</string>
     <string name="no">NO</string>
     <string name="key_store_pass">Key store password</string>
+    <string name="certPath">Cert path</string>
     <string name="wrong_credentials">Wrong credentials</string>
+    <string name="wrong_certificate">Keystore password or certificate path not set</string>
     <string name="client_cert_alias">Client</string>
     <string name="serviceProtocol">https://</string>
     <string name="host">10.0.2.2</string>
