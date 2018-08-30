@@ -1,7 +1,8 @@
 package org.unibl.etf.sni.task;
-
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.EditText;
@@ -21,15 +22,29 @@ import retrofit2.Call;
 public class LoginTask extends AsyncTask<Void,Void,Void> {
     private  EditText mUsername;
     private  EditText mPassword;
+    private EditText mKeyStorePass;
     private  Activity activity;
     private  TextView wrong;
     private String token;
 
-    public LoginTask(EditText mUsername, EditText mPassword,TextView wrong,Activity ctx) {
+    public LoginTask(EditText mUsername, EditText mPassword,EditText mKeyStorePass,TextView wrong,Activity ctx) {
         this.mUsername = mUsername;
         this.mPassword = mPassword;
+        this.mKeyStorePass=mKeyStorePass;
         this.wrong=wrong;
         this.activity = ctx;
+    }
+
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        SharedPreferences preferences=activity.getSharedPreferences("KeyStore",Context.MODE_PRIVATE);
+        String password=preferences.getString("keyStorePass","");
+        if(password.isEmpty()){
+            preferences.edit().putString("keyStorePass",mKeyStorePass.getText().toString()).apply();
+            mKeyStorePass.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -56,7 +71,13 @@ public class LoginTask extends AsyncTask<Void,Void,Void> {
             }
             mPassword.getText().clear();
         }else{
-            Toast.makeText(activity,"Something went wrong",Toast.LENGTH_LONG);
+            SharedPreferences preferences=activity.getSharedPreferences("KeyStore",Context.MODE_PRIVATE);
+            String password=preferences.getString("keyStorePass","");
+            if(!password.isEmpty()){
+                preferences.edit().putString("keyStorePass","").apply();
+                mKeyStorePass.setVisibility(View.VISIBLE);
+            }
+            Toast.makeText(activity,"Something went wrong",Toast.LENGTH_LONG).show();
         }
     }
 
@@ -69,6 +90,7 @@ public class LoginTask extends AsyncTask<Void,Void,Void> {
 
         } catch (IOException e) {
             e.printStackTrace();
+
         }
         return null;
     }

@@ -9,8 +9,9 @@
     <string name="dialog_message">Are you sure?</string>
     <string name="ok">YES</string>
     <string name="no">NO</string>
+    <string name="key_store_pass">Key store password</string>
     <string name="wrong_credentials">Wrong credentials</string>
-    <string name="client_cert_pass">lozzinka</string>
+    <string name="client_cert_alias">Client</string>
     <string name="serviceProtocol">https://</string>
     <string name="host">10.0.2.2</string>
     <string name="port">8443</string>
