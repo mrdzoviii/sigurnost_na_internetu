@@ -41,10 +41,12 @@ public class AccessListener implements PhaseListener {
 				if (user.getAdmin()) {
 					if (referrer != null && referrer.contains("cas/login")) {
 						address = "verify.xhtml?faces-redirect=true";
+						if(token!=null) {
 						token.setSso(false);
 						TokenDao.update(token);
+						}
 					} else {
-						if (token.getSso()) {
+						if (token!=null && token.getSso()) {
 							address = "index.xhtml?faces-redirect=true";
 						} else {
 							address = "verify.xhtml?faces-redirect=true";
@@ -59,13 +61,16 @@ public class AccessListener implements PhaseListener {
 					cxt.responseComplete();
 				}
 			}
-		} else if (req.getRequestURI().endsWith("/")) {
+		} else if (req.getRequestURI().endsWith("/") || req.getRequestURI().contains("index.xhtml")) {
 			if (user != null) {
 				session.setAttribute("user", user);
 				TokenDto token = TokenDao.getByUserId(user.getId());
 				if (user.getAdmin()) {
-					if (token.getSso())
+					if (token!=null && token.getSso()) {
+						if(req.getRequestURI().contains("index.xhtml"))
+							return;
 						address = "index.xhtml?faces-redirect=true";
+					}
 					else
 						address = "verify.xhtml?faces-redirect=true";
 				} else {

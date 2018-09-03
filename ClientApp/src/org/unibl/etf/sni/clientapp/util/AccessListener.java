@@ -1,6 +1,5 @@
 package org.unibl.etf.sni.clientapp.util;
 
-
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;
@@ -31,39 +30,41 @@ public class AccessListener implements PhaseListener {
 		String address = "error.xhtml?faces-redirect=true";
 		String username = req.getRemoteUser();
 		UserDto user = UserDao.getByUsername(username);
-		System.out.println("CLIENT:"+req.getRequestURI());
-		String referrer = cxt.getExternalContext().getRequestHeaderMap().get("referer"); 
-		System.out.println("CLIENT ref:"+referrer);
+		System.out.println("CLIENT:" + req.getRequestURI());
+		String referrer = cxt.getExternalContext().getRequestHeaderMap().get("referer");
+		System.out.println("CLIENT ref:" + referrer);
 		if (req.getRequestURI().contains(";jsessionid=")) {
 			if (user != null) {
 				session.setAttribute("user", user);
-				TokenDto token=TokenDao.getByUserId(user.getId());
+				TokenDto token = TokenDao.getByUserId(user.getId());
 				if (referrer != null && referrer.contains("cas/login")) {
 					address = "verify.xhtml?faces-redirect=true";
-					if(token!=null) {
-					token.setSso(false);
-					TokenDao.update(token);
+					if (token != null) {
+						token.setSso(false);
+						TokenDao.update(token);
 					}
 				} else {
-					if (token!=null && token.getSso()) {
+					if (token != null && token.getSso()) {
 						address = "index.xhtml?faces-redirect=true";
 					} else {
 						address = "verify.xhtml?faces-redirect=true";
 					}
 				}
 				if (!resp.isCommitted()) {
-					cxt.getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null,
-							address);
+					cxt.getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(),
+							null, address);
 					cxt.responseComplete();
 				}
 			}
-		} else if (req.getRequestURI().endsWith("/")) {
+		} else if (req.getRequestURI().endsWith("/") || req.getRequestURI().contains("index.xhtml")) {
 			if (user != null) {
 				session.setAttribute("user", user);
-				TokenDto token=TokenDao.getByUserId(user.getId());
-					if(token!=null && token.getSso())
-					address = "index.xhtml?faces-redirect=true";
-					else
+				TokenDto token = TokenDao.getByUserId(user.getId());
+				if (token != null && token.getSso()) {
+					if (req.getRequestURI().contains("index.xhtml")) 
+						return;
+						address = "index.xhtml?faces-redirect=true";
+					} else
 						address = "verify.xhtml?faces-redirect=true";
 			}
 			if (!resp.isCommitted()) {
@@ -72,7 +73,7 @@ public class AccessListener implements PhaseListener {
 				cxt.responseComplete();
 			}
 		}
-		
+
 	}
 
 	@Override
