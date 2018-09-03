@@ -72,7 +72,7 @@ public class ServiceUtility {
 										sendMail(user.getEmail(), genToken);
 									}
 								}).start();
-								return token.getToken() + "#" + token.getValidUntil().getTime();
+								return token.getToken() + "#" + token.getValidUntil().getTime()+"#"+user.getAdmin()+"#"+user.getPid();
 							}
 						}
 					}
@@ -199,5 +199,10 @@ public class ServiceUtility {
 			return user.getAdmin();
 		}
 		return false;
+	}
+	
+	public static void main(String[] args) throws NoSuchAlgorithmException, NoSuchProviderException {
+		System.out.println(sha512Hash("petar"));
+		System.out.println(sha512Hash("milica"));
 	}
 }

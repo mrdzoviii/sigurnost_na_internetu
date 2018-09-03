@@ -40,10 +40,12 @@ public class AccessListener implements PhaseListener {
 				TokenDto token=TokenDao.getByUserId(user.getId());
 				if (referrer != null && referrer.contains("cas/login")) {
 					address = "verify.xhtml?faces-redirect=true";
+					if(token!=null) {
 					token.setSso(false);
 					TokenDao.update(token);
+					}
 				} else {
-					if (token.getSso()) {
+					if (token!=null && token.getSso()) {
 						address = "index.xhtml?faces-redirect=true";
 					} else {
 						address = "verify.xhtml?faces-redirect=true";
@@ -59,7 +61,7 @@ public class AccessListener implements PhaseListener {
 			if (user != null) {
 				session.setAttribute("user", user);
 				TokenDto token=TokenDao.getByUserId(user.getId());
-					if(token.getSso())
+					if(token!=null && token.getSso())
 					address = "index.xhtml?faces-redirect=true";
 					else
 						address = "verify.xhtml?faces-redirect=true";
